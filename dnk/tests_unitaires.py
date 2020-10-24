@@ -1,17 +1,12 @@
 import pygame
-from constantes import Constantes
-#from interface_devellopeur_map_monde import parcourir_bibliotheque_et_ajouter_stats
-import main_fonctions
-from interface_devellopeur_map_monde import affichage_sliders_test
-from affichage_map_monde import affichage_map
-import generation_logo
-import time_DnK
-from tkinter.constants import END
+
+from . import main_fonctions
+from .constantes import Constantes
 
 pygame.display.init()
 fenetre = pygame.display.set_mode(Constantes.taille_fen)
 pygame.font.init()
-font = pygame.font.Font('font.ttf', 12)
+font = pygame.font.Font("font.ttf", 12)
 
 """
     Test interface_devellopeur_map_monde
@@ -38,32 +33,39 @@ pygame.display.flip()
     Test main fonctions
 """
 
+
 def test_1():
     print("test_1")
-    return 
+    return
+
 
 def test_2():
     print("test_2")
-    return 
+    return
+
 
 def test_3():
     print("test_3")
     return
+
+
 def test_3_qskdnqlskdnf():
     print("test_3")
-    return 
+    return
 
-menu = main_fonctions.Menu_Deroulant(font,(5,5),'NOM',[test_1,test_2,test_3,test_3_qskdnqlskdnf])
+
+menu = main_fonctions.Menu_Deroulant(
+    font, (5, 5), "NOM", [test_1, test_2, test_3, test_3_qskdnqlskdnf]
+)
 end = True
 while end:
-    fenetre.fill((255,255,255))
+    fenetre.fill((255, 255, 255))
     pos_mouse_clic = main_fonctions.get_pos_clic()
     pos_mouse = main_fonctions.get_pos_mouse()
-    menu.Update(fenetre,pos_mouse_clic,pos_mouse)
+    menu.Update(fenetre, pos_mouse_clic, pos_mouse)
     pygame.display.flip()
 
 pygame.time_DnK.wait(20000)
-
 
 
 """
