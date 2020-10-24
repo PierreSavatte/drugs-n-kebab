@@ -1,10 +1,10 @@
-from constantes import Constantes
+from .constantes import Constantes
 import pygame
-import main_fonctions
+from . import main_fonctions
 import time
 import random
 import math
-import interface_devellopeur_map_monde
+from . import interface_devellopeur_map_monde
 
 def recolore_main_color(sprite,couleur_arrivee):
     couleur_a_changer = main_fonctions.get_main_color(sprite)
