@@ -240,7 +240,7 @@ def gen_batiments(ville):
                 ):
                     ville[x][y] = [
                         get_val_aleatoire_parmis(
-                            get_liste_sprite("city/maisons")
+                            get_liste_sprite("city/houses")
                         ),
                         gen_stats(Constantes.type_maison),
                     ]

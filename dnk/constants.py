@@ -48,7 +48,7 @@ class Constantes:
     decalage_entre_boutons_y = 2
 
     sprite_fleche_menu_deroulant = os.path.join(
-        sprites_path, "world", "fleche_menu_deroulant.png"
+        sprites_path, "world", "drop_down_menu_arrow.png"
     )
 
     """
@@ -107,7 +107,7 @@ class Constantes:
     )
 
     sprite_pipette = os.path.join(sprites_path, "world", "pipette.bmp")
-    sprite_fleche = os.path.join(sprites_path, "world", "fleche.bmp")
+    sprite_fleche = os.path.join(sprites_path, "world", "arrow.bmp")
     sprite_quit = os.path.join(sprites_path, "world", "quit.bmp")
 
     """
@@ -121,7 +121,7 @@ class Constantes:
     taille_sprite_point = (10, 10)
 
     vitesse_vehicule = 15
-    sprite_avion = os.path.join(sprites_path, "world", "avion.png")
+    sprite_avion = os.path.join(sprites_path, "world", "plane.png")
     couleur_avion_main_depart = (239, 228, 176)
     couleur_avion_secondaire_depart = (127, 127, 127)
 
@@ -261,29 +261,31 @@ class Constantes:
     val_min_cout_type_buildings = 500000
     val_max_cout_type_buildings = 1000000
 
-    nom_sprite_terrain = os.path.join(sprites_path, "city", "sol", "sol.png")
+    nom_sprite_terrain = os.path.join(
+        sprites_path, "city", "floor", "floor.png"
+    )
     nom_sprite_terrain_montagne = os.path.join(
-        sprites_path, "city", "sol", "sol_mountain.png"
+        sprites_path, "city", "floor", "mountain_floor.png"
     )
     nom_sprite_terrain_champ_1 = os.path.join(
-        sprites_path, "city", "sol", "sol_champ1.png"
+        sprites_path, "city", "floor", "floor_field_1.png"
     )
     nom_sprite_terrain_champ_2 = os.path.join(
-        sprites_path, "city", "sol", "sol_champ2.png"
+        sprites_path, "city", "floor", "floor_field_2.png"
     )
     nom_sprite_terrain_champ_3 = os.path.join(
-        sprites_path, "city", "sol", "sol_champ3.png"
+        sprites_path, "city", "floor", "floor_field_3.png"
     )
-    nom_sprite_foret = os.path.join(sprites_path, "city", "sol", "Wood.png")
+    nom_sprite_foret = os.path.join(sprites_path, "city", "floor", "wood.png")
 
     nom_sprite_route_x = os.path.join(
-        sprites_path, "city", "sol", "Road1.1.png"
+        sprites_path, "city", "floor", "Road1.1.png"
     )
     nom_sprite_route_y = os.path.join(
-        sprites_path, "city", "sol", "Road0.1.png"
+        sprites_path, "city", "floor", "Road0.1.png"
     )
     nom_sprite_route_croisement = os.path.join(
-        sprites_path, "city", "sol", "croisement.1.png"
+        sprites_path, "city", "floor", "croisement.1.png"
     )
     noms_sprites_route = [
         nom_sprite_route_x,
@@ -337,55 +339,55 @@ class Constantes:
     sprite_mur = os.path.join(sprites_path, "restaurant", "wall.png")
     sprite_sol = os.path.join(sprites_path, "restaurant", "floor_1.png")
 
-    sprite_evier = os.path.join(sprites_path, "restaurant", "Evier.png")
+    sprite_evier = os.path.join(sprites_path, "restaurant", "sink.png")
     sprite_table_de_travail = os.path.join(
-        sprites_path, "restaurant", "Table_de_travail.png"
+        sprites_path, "restaurant", "countertop_7.png"
     )
-    sprite_comptoir = os.path.join(sprites_path, "restaurant", "Comptoir.png")
+    sprite_comptoir = os.path.join(
+        sprites_path, "restaurant", "countertop_8.png"
+    )
     sprite_machine_kebab_1 = os.path.join(
-        sprites_path, "restaurant", "Machine_kebab_1.png"
+        sprites_path, "restaurant", "grill_1.png"
     )
     sprite_machine_kebab_2 = os.path.join(
-        sprites_path, "restaurant", "Machine_kebab_2.png"
+        sprites_path, "restaurant", "grill_2.png"
     )
-    sprite_caisse = os.path.join(sprites_path, "restaurant", "caisse_up.png")
-    sprite_table_simple = os.path.join(
-        sprites_path, "restaurant", "Table_simple.png"
+    sprite_caisse = os.path.join(
+        sprites_path, "restaurant", "cash_register.png"
     )
+    sprite_table_simple = os.path.join(sprites_path, "restaurant", "table.png")
     sprite_tapis_1 = os.path.join(sprites_path, "restaurant", "carpet.png")
 
     liste_cuisines = [sprite_machine_kebab_1]
 
     sprite_meuble_1 = os.path.join(
-        sprites_path, "restaurant", "furniture", "Meuble_1.png"
+        sprites_path, "restaurant", "furniture", "countertop_1.png"
     )
     sprite_meuble_2 = os.path.join(
-        sprites_path, "restaurant", "furniture", "Meuble_2.png"
+        sprites_path, "restaurant", "furniture", "countertop_2.png"
     )
     sprite_meuble_3 = os.path.join(
-        sprites_path, "restaurant", "furniture", "Meuble_3.png"
+        sprites_path, "restaurant", "furniture", "countertop_3.png"
     )
     sprite_meuble_4 = os.path.join(
-        sprites_path, "restaurant", "furniture", "Meuble_4.png"
+        sprites_path, "restaurant", "furniture", "countertop_4.png"
     )
     sprite_meuble_5 = os.path.join(
-        sprites_path, "restaurant", "furniture", "Meuble_5.png"
+        sprites_path, "restaurant", "furniture", "countertop_5.png"
     )
     sprite_meuble_6 = os.path.join(
-        sprites_path, "restaurant", "furniture", "Meuble_6.png"
+        sprites_path, "restaurant", "furniture", "countertop_6.png"
     )
 
     sprite_chaise_left = os.path.join(
-        sprites_path, "restaurant", "chaise_1_left.png"
+        sprites_path, "restaurant", "chair_left.png"
     )
     sprite_chaise_right = os.path.join(
-        sprites_path, "restaurant", "chaise_1_right.png"
+        sprites_path, "restaurant", "chair_right.png"
     )
-    sprite_chaise_up = os.path.join(
-        sprites_path, "restaurant", "chaise_1_up.png"
-    )
+    sprite_chaise_up = os.path.join(sprites_path, "restaurant", "chair_up.png")
     sprite_chaise_down = os.path.join(
-        sprites_path, "restaurant", "chaise_1_down.png"
+        sprites_path, "restaurant", "chair_down.png"
     )
     sprites_chaise = [
         sprite_chaise_up,
@@ -399,8 +401,8 @@ class Constantes:
     sprites_asian_m_1 = get_character_sprites_paths("asian", "man")
     sprites_asian_f_1 = get_character_sprites_paths("asian", "f")
 
-    sprites_european_m_1 = get_character_sprites_paths("european", "man")
-    sprites_european_f_1 = get_character_sprites_paths("european", "f")
+    sprites_european_m_1 = get_character_sprites_paths("french", "man")
+    sprites_european_f_1 = get_character_sprites_paths("french", "f")
 
     sprites_joueur = sprites_african_f_2
 
@@ -453,13 +455,13 @@ class Constantes:
 
     nom_algerienne = "algerienne"
     nom_samourai = "samourai"
-    nom_sauce_europeanhe = "sauce europeanhe"
+    nom_sauce_blanche = "sauce blanche"
     nom_mayonnaise = "mayonnaise"
     nom_ketchup = "ketchup"
     sauces = [
         nom_algerienne,
         nom_samourai,
-        nom_sauce_europeanhe,
+        nom_sauce_blanche,
         nom_mayonnaise,
         nom_ketchup,
     ]
@@ -865,9 +867,10 @@ class Constantes:
 
     african = "african"
     american = "american"
+    arabic = "arabic"
     asian = "asian"
     creole = "creole"
-    european = "european"
+    french = "french"
     indian = "indian"
     latin_american = "latin_american"
     scandinavian = "scandinavian"
@@ -877,7 +880,7 @@ class Constantes:
         american,
         asian,
         creole,
-        european,
+        french,
         indian,
         latin_american,
         scandinavian,
@@ -897,8 +900,8 @@ class Constantes:
     asian_woman_names = ["Hisae", "Yumiko"]
     asian_man_names = ["Genjiro", "Ryoichi"]
 
-    european_woman_names = ["Marie", "Lucie"]
-    european_man_names = ["Claude", "Quentin"]
+    french_woman_names = ["Marie", "Lucie"]
+    french_man_names = ["Claude", "Quentin"]
 
     nom_stat_cuisine = "stat. cuisine"
     nom_stat_nettoyage = "stat. nettoyage"
