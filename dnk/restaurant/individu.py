@@ -1,15 +1,15 @@
 from .pathfinding_A_etoile import pathfinding
 from .. import main_fonctions
-from ..constants import Constantes
+from ..constants import Constantes, get_character_sprites_paths
 
 
 class Individu:
 
     tabl_positions = []
 
-    def __init__(self, couleur_argument, sexe_arg):
-        self.couleur = couleur_argument
-        self.sexe = sexe_arg
+    def __init__(self, ethnicity, gender):
+        self.ethnicity = ethnicity
+        self.gender = gender
         (self.nom, self.sprites) = self.get_nom()
         self.position = Constantes.spawn_restaurant
         self.orientation = "UP"
@@ -20,7 +20,6 @@ class Individu:
 
         self.indice_tabl_positions = len(Individu.tabl_positions)
         Individu.tabl_positions.append(self.position)
-        return
 
     def MAJ_pos_tabl_positions(self):
         Individu.tabl_positions[self.indice_tabl_positions] = self.position
@@ -34,62 +33,65 @@ class Individu:
     def get_nom(self):
         nom = None
         sprites = []
-        if self.couleur in Constantes.ethnic_table:
-            if self.couleur == Constantes.nom_arabes:
-                if self.sexe == Constantes.nom_femme:
+        if self.ethnicity in Constantes.ethnic_table:
+            if self.ethnicity == Constantes.arabic:
+                if self.gender == Constantes.woman:
                     nom = main_fonctions.get_val_aleatoire_parmis(
-                        Constantes.tableau_noms_femme_arabes
+                        Constantes.arabic_woman_names
                     )
                 else:
                     nom = main_fonctions.get_val_aleatoire_parmis(
-                        Constantes.tableau_noms_homme_arabes
+                        Constantes.arabic_man_names
                     )
-                sprites = self.get_tabl_sprite(Constantes.nom_noir)
-            elif self.couleur == Constantes.nom_asiats:
-                if self.sexe == Constantes.nom_femme:
+                sprites = get_character_sprites_paths(
+                    self.ethnicity, self.gender
+                )
+            elif self.ethnicity == Constantes.asian:
+                if self.gender == Constantes.woman:
                     nom = main_fonctions.get_val_aleatoire_parmis(
-                        Constantes.tableau_noms_femme_asiats
+                        Constantes.asian_woman_names
                     )
                 else:
                     nom = main_fonctions.get_val_aleatoire_parmis(
-                        Constantes.tableau_noms_homme_asiats
+                        Constantes.asian_man_names
                     )
-                sprites = self.get_tabl_sprite(Constantes.nom_asiats)
-            elif self.couleur == Constantes.nom_blanc:
-                if self.sexe == Constantes.nom_femme:
+                sprites = get_character_sprites_paths(
+                    self.ethnicity, self.gender
+                )
+            elif self.ethnicity == Constantes.french:
+                if self.gender == Constantes.woman:
                     nom = main_fonctions.get_val_aleatoire_parmis(
-                        Constantes.tableau_noms_femme_blanc
+                        Constantes.french_woman_names
                     )
                 else:
                     nom = main_fonctions.get_val_aleatoire_parmis(
-                        Constantes.tableau_noms_homme_blanc
+                        Constantes.french_man_names
                     )
-                sprites = self.get_tabl_sprite(Constantes.nom_blanc)
-            elif self.couleur == Constantes.nom_noir:
-                if self.sexe == Constantes.nom_femme:
+                sprites = get_character_sprites_paths(
+                    self.ethnicity, self.gender
+                )
+            elif self.ethnicity == Constantes.african:
+                if self.gender == Constantes.woman:
                     nom = main_fonctions.get_val_aleatoire_parmis(
-                        Constantes.tableau_noms_femme_noir
+                        Constantes.african_woman_names
                     )
                 else:
                     nom = main_fonctions.get_val_aleatoire_parmis(
-                        Constantes.tableau_noms_homme_noir
+                        Constantes.african_man_names
                     )
-                sprites = self.get_tabl_sprite(Constantes.nom_noir)
+                sprites = get_character_sprites_paths(
+                    self.ethnicity, self.gender
+                )
             else:
                 # attribution secondaire
-                self.couleur = Constantes.nom_blanc
+                self.ethnicity = Constantes.african
                 nom = main_fonctions.get_val_aleatoire_parmis(
-                    Constantes.tableau_noms_homme_blanc
+                    Constantes.african_woman_names
                 )
-                sprites = self.get_tabl_sprite(Constantes.nom_blanc)
+                sprites = get_character_sprites_paths(
+                    self.ethnicity, self.gender
+                )
         return nom, sprites
-
-    def get_tabl_sprite(self, constante_race):
-        sprites = []
-        nom_sprite = "restaurant/" + constante_race + "_" + self.sexe + "_1_"
-        for orientation in ["up", "down", "right", "left"]:
-            sprites.append(nom_sprite + orientation + ".png")
-        return sprites
 
     def avancer_d_un_pas(self):
         (x, y) = self.position
