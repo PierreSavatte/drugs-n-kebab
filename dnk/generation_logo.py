@@ -1,6 +1,6 @@
 import pygame
 
-from .constantes import Constantes
+from .constants import Constantes
 from .main_fonctions import get_clavier
 
 

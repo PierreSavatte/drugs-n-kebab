@@ -1,6 +1,6 @@
 import random
 
-from ..constantes import Constantes
+from ..constants import Constantes
 
 
 def gen_ville_vide():

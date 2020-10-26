@@ -1,6 +1,6 @@
 import math
 
-from ..constantes import Constantes
+from ..constants import Constantes
 
 
 def distance_entre_deux_points(A, B):

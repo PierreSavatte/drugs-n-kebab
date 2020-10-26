@@ -6,7 +6,7 @@ from .boutons_actions_employes import Boutons_actions_employes
 from .client import Client
 from .personnel import Personnel
 from .. import main_fonctions
-from ..constantes import Constantes
+from ..constants import Constantes
 
 
 def get_valeur_alea(tabl):

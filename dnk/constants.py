@@ -1,9 +1,13 @@
 import os
 
+root_path = os.path.dirname(os.path.abspath(__file__))
+resources_path = os.path.join(root_path, "resources")
+sprites_path = os.path.join(resources_path, "sprites")
 
-def get_character_sprites_paths(sprites_path, ethnicity, gender):
-    return [
-        os.path.join(
+
+def get_character_sprites_paths(ethnicity, gender):
+    return {
+        orientation: os.path.join(
             sprites_path,
             "restaurant",
             "characters",
@@ -12,14 +16,10 @@ def get_character_sprites_paths(sprites_path, ethnicity, gender):
             orientation,
         )
         for orientation in ["up", "down", "right", "left"]
-    ]
+    }
 
 
 class Constantes:
-    root_path = os.path.dirname(os.path.abspath(__file__))
-    resources_path = os.path.join(root_path, "resources")
-    sprites_path = os.path.join(resources_path, "sprites")
-
     taille_fen = (1000, 500)
 
     temp_refresh = 0.01
@@ -393,22 +393,14 @@ class Constantes:
         sprite_chaise_left,
         sprite_chaise_right,
     ]
-    sprites_african_m_2 = get_character_sprites_paths(
-        sprites_path, "african", "m"
-    )
-    sprites_african_f_2 = get_character_sprites_paths(
-        sprites_path, "african", "f"
-    )
+    sprites_african_m_2 = get_character_sprites_paths("african", "man")
+    sprites_african_f_2 = get_character_sprites_paths("african", "f")
 
-    sprites_asian_m_1 = get_character_sprites_paths(sprites_path, "asian", "m")
-    sprites_asian_f_1 = get_character_sprites_paths(sprites_path, "asian", "f")
+    sprites_asian_m_1 = get_character_sprites_paths("asian", "man")
+    sprites_asian_f_1 = get_character_sprites_paths("asian", "f")
 
-    sprites_european_m_1 = get_character_sprites_paths(
-        sprites_path, "european", "m"
-    )
-    sprites_european_f_1 = get_character_sprites_paths(
-        sprites_path, "european", "f"
-    )
+    sprites_european_m_1 = get_character_sprites_paths("european", "man")
+    sprites_european_f_1 = get_character_sprites_paths("european", "f")
 
     sprites_joueur = sprites_african_f_2
 
@@ -891,8 +883,8 @@ class Constantes:
         scandinavian,
     ]
 
-    man = "m"
-    woman = "w"
+    man = "man"
+    woman = "woman"
 
     tableau_sexe = [man, woman]
 

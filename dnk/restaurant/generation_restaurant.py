@@ -3,7 +3,7 @@ Created on 18 janv. 2016
 
 @author: Hugo
 """
-from ..constantes import Constantes
+from ..constants import Constantes
 
 
 def generation_bibliotheque(fichier_sprite, walkable, objectif):

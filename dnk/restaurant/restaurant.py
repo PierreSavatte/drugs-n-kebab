@@ -1,5 +1,5 @@
 from . import affichage
-from ..constantes import Constantes
+from ..constants import Constantes
 
 
 class Restaurant:

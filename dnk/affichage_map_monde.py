@@ -6,7 +6,7 @@ import pygame
 
 from . import interface_devellopeur_map_monde
 from . import main_fonctions
-from .constantes import Constantes
+from .constants import Constantes
 
 
 def recolore_main_color(sprite, couleur_arrivee):

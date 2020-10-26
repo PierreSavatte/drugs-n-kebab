@@ -4,7 +4,7 @@ import time
 
 import pygame
 
-from .constantes import Constantes
+from .constants import Constantes
 
 
 def get_val_aleatoire_parmis(tabl):

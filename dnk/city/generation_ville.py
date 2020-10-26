@@ -2,7 +2,7 @@ import glob
 import pickle
 import random
 
-from ..constantes import Constantes
+from ..constants import Constantes
 from ..main_fonctions import get_val_aleatoire_parmis
 
 

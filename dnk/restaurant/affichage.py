@@ -3,7 +3,7 @@ import time
 import pygame
 
 from .. import main_fonctions
-from ..constantes import Constantes
+from ..constants import Constantes
 
 
 def coordonnees_en_position(coordonnees, taille_sprite):

@@ -1,7 +1,7 @@
 import time
 
 from .. import main_fonctions
-from ..constantes import Constantes
+from ..constants import Constantes
 
 
 class Boutons_actions_employes:

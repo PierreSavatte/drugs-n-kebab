@@ -2,7 +2,7 @@ import random
 
 from .individu import Individu
 from .. import main_fonctions
-from ..constantes import Constantes
+from ..constants import Constantes
 
 
 class Personnel(Individu):

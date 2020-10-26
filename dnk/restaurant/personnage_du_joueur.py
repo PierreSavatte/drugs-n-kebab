@@ -1,6 +1,6 @@
 import pygame
 
-from ..constantes import Constantes
+from ..constants import Constantes
 
 
 class Perso_du_joueur:

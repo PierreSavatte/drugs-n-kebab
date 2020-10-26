@@ -1,6 +1,6 @@
 from .pathfinding_A_etoile import pathfinding
 from .. import main_fonctions
-from ..constantes import Constantes
+from ..constants import Constantes
 
 
 class Individu:
