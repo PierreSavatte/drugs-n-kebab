@@ -104,13 +104,13 @@ def gest_vehicule(fenetre, font, bibliotheque_villes, tabl_vehicule, temps):
 
 def affichage_temps(fenetre, temps, affichage_pause, temps_affichee):
     temps_a_afficher = temps.get_temps_horloge()
-    surface_temps = pygame.font.Font("font.ttf", 20).render(
+    surface_temps = pygame.font.Font("resources/font.ttf", 20).render(
         temps_a_afficher, True, (0, 0, 0)
     )
     fenetre.blit(surface_temps, (5, 5))
     if temps.est_en_pause():
         if affichage_pause:
-            surface_pause = pygame.font.Font("font.ttf", 30).render(
+            surface_pause = pygame.font.Font("resources/font.ttf", 30).render(
                 "PAUSE", True, (255, 255, 255)
             )
             taille_fenetre = fenetre.get_size()
@@ -142,7 +142,7 @@ def affichage_map(fenetre, temps, mode_devellopeur=False):
     tabl_vehicule = []
     bibliotheque_villes = Constantes.villes
     end = False
-    font_mouse = pygame.font.Font("font.ttf", 12)
+    font_mouse = pygame.font.Font("resources/font.ttf", 12)
     affichage_pause = True
     temps_affichee = None
     while not end:

@@ -1,4 +1,24 @@
+import os
+
+
+def get_character_sprites_paths(sprites_path, ethnicity, gender):
+    return [
+        os.path.join(
+            sprites_path,
+            "restaurant",
+            "characters",
+            ethnicity,
+            gender,
+            orientation,
+        )
+        for orientation in ["up", "down", "right", "left"]
+    ]
+
+
 class Constantes:
+    root_path = os.path.dirname(os.path.abspath(__file__))
+    resources_path = os.path.join(root_path, "resources")
+    sprites_path = os.path.join(resources_path, "sprites")
 
     taille_fen = (1000, 500)
 
@@ -6,7 +26,8 @@ class Constantes:
 
     larg_cadre_interface = 150
 
-    icone = "icone.ico"
+    icone = os.path.join(resources_path, "icone.ico")
+    font = os.path.join(resources_path, "font.ttf")
 
     taille_logo = (10, 10)
 
@@ -26,8 +47,8 @@ class Constantes:
     decalage_bouton_main_deroulement_y = 2
     decalage_entre_boutons_y = 2
 
-    sprite_fleche_menu_deroulant = (
-        "sprites_main_menu/fleche_menu_deroulant.png"
+    sprite_fleche_menu_deroulant = os.path.join(
+        sprites_path, "world", "fleche_menu_deroulant.png"
     )
 
     """
@@ -85,9 +106,9 @@ class Constantes:
         y_start_bouton_fleche + taille_boutons + decalage_couleur_curseur
     )
 
-    sprite_pipette = "sprites_main_menu/pipette.bmp"
-    sprite_fleche = "sprites_main_menu/fleche.bmp"
-    sprite_quit = "sprites_main_menu/quit.bmp"
+    sprite_pipette = os.path.join(sprites_path, "world", "pipette.bmp")
+    sprite_fleche = os.path.join(sprites_path, "world", "fleche.bmp")
+    sprite_quit = os.path.join(sprites_path, "world", "quit.bmp")
 
     """
     ###
@@ -95,12 +116,12 @@ class Constantes:
     ###
     """
 
-    sprite_map_monde = "sprites_main_menu/world_map_2.png"
-    sprite_point = "sprites_main_menu/point.png"
+    sprite_map_monde = os.path.join(sprites_path, "world", "world_map_2.png")
+    sprite_point = os.path.join(sprites_path, "world", "point.png")
     taille_sprite_point = (10, 10)
 
     vitesse_vehicule = 15
-    sprite_avion = "sprites_main_menu/avion.png"
+    sprite_avion = os.path.join(sprites_path, "world", "avion.png")
     couleur_avion_main_depart = (239, 228, 176)
     couleur_avion_secondaire_depart = (127, 127, 127)
 
@@ -240,16 +261,30 @@ class Constantes:
     val_min_cout_type_buildings = 500000
     val_max_cout_type_buildings = 1000000
 
-    nom_sprite_terrain = "sprites_ville/sol/sol.png"
-    nom_sprite_terrain_montagne = "sprites_ville/sol/sol_mountain.png"
-    nom_sprite_terrain_champ_1 = "sprites_ville/sol/sol_champ1.png"
-    nom_sprite_terrain_champ_2 = "sprites_ville/sol/sol_champ2.png"
-    nom_sprite_terrain_champ_3 = "sprites_ville/sol/sol_champ3.png"
-    nom_sprite_foret = "sprites_ville/sol/Wood.png"
+    nom_sprite_terrain = os.path.join(sprites_path, "city", "sol", "sol.png")
+    nom_sprite_terrain_montagne = os.path.join(
+        sprites_path, "city", "sol", "sol_mountain.png"
+    )
+    nom_sprite_terrain_champ_1 = os.path.join(
+        sprites_path, "city", "sol", "sol_champ1.png"
+    )
+    nom_sprite_terrain_champ_2 = os.path.join(
+        sprites_path, "city", "sol", "sol_champ2.png"
+    )
+    nom_sprite_terrain_champ_3 = os.path.join(
+        sprites_path, "city", "sol", "sol_champ3.png"
+    )
+    nom_sprite_foret = os.path.join(sprites_path, "city", "sol", "Wood.png")
 
-    nom_sprite_route_x = "sprites_ville/Road1.1.png"
-    nom_sprite_route_y = "sprites_ville/Road0.1.png"
-    nom_sprite_route_croisement = "sprites_ville/croisement.1.png"
+    nom_sprite_route_x = os.path.join(
+        sprites_path, "city", "sol", "Road1.1.png"
+    )
+    nom_sprite_route_y = os.path.join(
+        sprites_path, "city", "sol", "Road0.1.png"
+    )
+    nom_sprite_route_croisement = os.path.join(
+        sprites_path, "city", "sol", "croisement.1.png"
+    )
     noms_sprites_route = [
         nom_sprite_route_x,
         nom_sprite_route_y,
@@ -299,84 +334,83 @@ class Constantes:
     nom_biblio_walkable = "walkable"
     nom_biblio_est_objectif = "est_objectif"
 
-    sprite_mur = "Sprites/Mur.png"
-    sprite_sol = "Sprites/Sol_1.png"
+    sprite_mur = os.path.join(sprites_path, "restaurant", "wall.png")
+    sprite_sol = os.path.join(sprites_path, "restaurant", "floor_1.png")
 
-    sprite_evier = "Sprites/Evier.png"
-    sprite_table_de_travail = "Sprites/Table_de_travail.png"
-    sprite_comptoir = "Sprites/Comptoir.png"
-    sprite_machine_kebab_1 = "Sprites/Machine_kebab_1.png"
-    sprite_machine_kebab_2 = "Sprites/Machine_kebab_2.png"
-    sprite_caisse = "Sprites/caisse_up.png"
-    sprite_table_simple = "Sprites/Table_simple.png"
-    sprite_tapis_1 = "Sprites/Tapis_1.png"
+    sprite_evier = os.path.join(sprites_path, "restaurant", "Evier.png")
+    sprite_table_de_travail = os.path.join(
+        sprites_path, "restaurant", "Table_de_travail.png"
+    )
+    sprite_comptoir = os.path.join(sprites_path, "restaurant", "Comptoir.png")
+    sprite_machine_kebab_1 = os.path.join(
+        sprites_path, "restaurant", "Machine_kebab_1.png"
+    )
+    sprite_machine_kebab_2 = os.path.join(
+        sprites_path, "restaurant", "Machine_kebab_2.png"
+    )
+    sprite_caisse = os.path.join(sprites_path, "restaurant", "caisse_up.png")
+    sprite_table_simple = os.path.join(
+        sprites_path, "restaurant", "Table_simple.png"
+    )
+    sprite_tapis_1 = os.path.join(sprites_path, "restaurant", "carpet.png")
 
     liste_cuisines = [sprite_machine_kebab_1]
 
-    sprite_meuble_1 = "Sprites/Meuble_1.png"
-    sprite_meuble_2 = "Sprites/Meuble_2.png"
-    sprite_meuble_3 = "Sprites/Meuble_3.png"
-    sprite_meuble_4 = "Sprites/Meuble_4.png"
-    sprite_meuble_5 = "Sprites/Meuble_5.png"
-    sprite_meuble_6 = "Sprites/Meuble_6.png"
+    sprite_meuble_1 = os.path.join(
+        sprites_path, "restaurant", "furniture", "Meuble_1.png"
+    )
+    sprite_meuble_2 = os.path.join(
+        sprites_path, "restaurant", "furniture", "Meuble_2.png"
+    )
+    sprite_meuble_3 = os.path.join(
+        sprites_path, "restaurant", "furniture", "Meuble_3.png"
+    )
+    sprite_meuble_4 = os.path.join(
+        sprites_path, "restaurant", "furniture", "Meuble_4.png"
+    )
+    sprite_meuble_5 = os.path.join(
+        sprites_path, "restaurant", "furniture", "Meuble_5.png"
+    )
+    sprite_meuble_6 = os.path.join(
+        sprites_path, "restaurant", "furniture", "Meuble_6.png"
+    )
 
-    sprite_chaise_left = "Sprites/chaise_1_left.png"
-    sprite_chaise_right = "Sprites/chaise_1_right.png"
-    sprite_chaise_up = "Sprites/chaise_1_up.png"
-    sprite_chaise_down = "Sprites/chaise_1_down.png"
+    sprite_chaise_left = os.path.join(
+        sprites_path, "restaurant", "chaise_1_left.png"
+    )
+    sprite_chaise_right = os.path.join(
+        sprites_path, "restaurant", "chaise_1_right.png"
+    )
+    sprite_chaise_up = os.path.join(
+        sprites_path, "restaurant", "chaise_1_up.png"
+    )
+    sprite_chaise_down = os.path.join(
+        sprites_path, "restaurant", "chaise_1_down.png"
+    )
     sprites_chaise = [
         sprite_chaise_up,
         sprite_chaise_down,
         sprite_chaise_left,
         sprite_chaise_right,
     ]
+    sprites_african_m_2 = get_character_sprites_paths(
+        sprites_path, "african", "m"
+    )
+    sprites_african_f_2 = get_character_sprites_paths(
+        sprites_path, "african", "f"
+    )
 
-    sprites_joueur = [
-        "Sprites/joueur_up.png",
-        "Sprites/joueur_down.png",
-        "Sprites/joueur_right.png",
-        "Sprites/joueur_left.png",
-    ]
-    sprite_table_simple = "Sprites/Table_simple.png"
+    sprites_asian_m_1 = get_character_sprites_paths(sprites_path, "asian", "m")
+    sprites_asian_f_1 = get_character_sprites_paths(sprites_path, "asian", "f")
 
-    sprites_noir_m_2 = [
-        "Sprites/noir_m_2_up.png",
-        "Sprites/noir_m_2_down.png",
-        "Sprites/noir_m_2_right.png",
-        "Sprites/noir_m_2_left.png",
-    ]
-    sprites_noir_f_2 = [
-        "Sprites/noir_f_2_up.png",
-        "Sprites/noir_f_2_down.png",
-        "Sprites/noir_f_2_right.png",
-        "Sprites/noir_f_2_left.png",
-    ]
+    sprites_european_m_1 = get_character_sprites_paths(
+        sprites_path, "european", "m"
+    )
+    sprites_european_f_1 = get_character_sprites_paths(
+        sprites_path, "european", "f"
+    )
 
-    sprites_jaune_m_1 = [
-        "Sprites/jaune_m_1_up.png",
-        "Sprites/jaune_m_1_down.png",
-        "Sprites/jaune_m_1_right.png",
-        "Sprites/jaune_m_1_left.png",
-    ]
-    sprites_jaune_f_1 = [
-        "Sprites/jaune_f_1_up.png",
-        "Sprites/jaune_f_1_down.png",
-        "Sprites/jaune_f_1_right.png",
-        "Sprites/jaune_f_1_left.png",
-    ]
-
-    sprites_blanc_m_1 = [
-        "Sprites/blanc_m_1_up.png",
-        "Sprites/blanc_m_1_down.png",
-        "Sprites/blanc_m_1_right.png",
-        "Sprites/blanc_m_1_left.png",
-    ]
-    sprites_blanc_f_1 = [
-        "Sprites/blanc_f_1_up.png",
-        "Sprites/blanc_f_1_down.png",
-        "Sprites/blanc_f_1_right.png",
-        "Sprites/blanc_f_1_left.png",
-    ]
+    sprites_joueur = sprites_african_f_2
 
     """
         PLATS
@@ -427,13 +461,13 @@ class Constantes:
 
     nom_algerienne = "algerienne"
     nom_samourai = "samourai"
-    nom_sauce_blanche = "sauce blanche"
+    nom_sauce_europeanhe = "sauce europeanhe"
     nom_mayonnaise = "mayonnaise"
     nom_ketchup = "ketchup"
     sauces = [
         nom_algerienne,
         nom_samourai,
-        nom_sauce_blanche,
+        nom_sauce_europeanhe,
         nom_mayonnaise,
         nom_ketchup,
     ]
@@ -488,7 +522,6 @@ class Constantes:
         nom_pain: 1,
         nom_thon: 1,
         nom_oeuf: 1,
-        nom_salade: 1,
         nom_tomate: 1,
         nom_salade: 1,
         nom_sauce: 1,
@@ -838,169 +871,42 @@ class Constantes:
         Personnel:
     """
 
-    nom_arabes = "arabes"
-    nom_asiats = "asiats"
-    nom_blanc = "blanc"
-    nom_noir = "noir"
-    nom_rastas = "rastas"
-    nom_indiens = "indiens"
-    nom_latinos = "latinos"
-    nom_americains = "americains"
-    nom_nordiques = "nordiques"
-    nom_nazis = "nazis"
+    african = "african"
+    american = "american"
+    asian = "asian"
+    creole = "creole"
+    european = "european"
+    indian = "indian"
+    latin_american = "latin_american"
+    scandinavian = "scandinavian"
 
-    tableau_couleurs = [
-        nom_arabes,
-        nom_asiats,
-        nom_blanc,
-        nom_noir,
-        nom_rastas,
-        nom_indiens,
-        nom_latinos,
-        nom_americains,
-        nom_nordiques,
-        nom_nazis,
+    ethnic_table = [
+        african,
+        american,
+        asian,
+        creole,
+        european,
+        indian,
+        latin_american,
+        scandinavian,
     ]
 
-    nom_homme = "h"
-    nom_femme = "f"
+    man = "m"
+    woman = "w"
 
-    tableau_sexe = [nom_homme, nom_femme]
+    tableau_sexe = [man, woman]
 
-    tableau_noms_homme_arabes = [
-        "Abdel",
-        "Mohammed",
-        "Ali",
-        "Ahmed",
-        "Bilal",
-        "Djibril",
-        "Farid",
-        "Habib",
-        "Ibrahim",
-        "Ismail",
-        "Kamel",
-        "Nabil",
-        "Nacer",
-        "Omar",
-        "Samir",
-        "Salim",
-        "Yacine",
-        "Youssef",
-        "Younes",
-    ]
-    tableau_noms_femme_arabes = [
-        "Aïcha",
-        "Amina",
-        "Anissa",
-        "Fatima",
-        "Farida",
-        "Jamila",
-        "Jasmine",
-        "Jenna",
-        "Kenza",
-        "Karima",
-        "Leila",
-        "Mounia",
-        "Rachida",
-        "Saïda",
-        "Tania",
-        "Wahida",
-        "Yasmina",
-    ]
+    african_woman_names = ["Vumi", "Ima"]
+    african_man_names = ["Elikia", "Nsi"]
 
-    tableau_noms_homme_asiats = [
-        "Chong",
-        "Kim",
-        "Jun",
-        "Akihide",
-        "Arihiro",
-        "Dai",
-        "Daisuke",
-        "Gaku",
-        "Genjiro",
-        "Haruhiko",
-        "Hayato",
-        "Hiroo",
-        "Hyuga",
-        "Jirokichi",
-        "Jiro",
-        "Katsuro",
-        "Kazuki",
-        "Len",
-        "Masahiko",
-        "Nagato",
-        "Nobushige",
-        "Renji",
-        "Ryoichi",
-        "Seijiro",
-        "Yukimura",
-    ]
-    tableau_noms_femme_asiats = [
-        "Akane",
-        "Akeko",
-        "Ami",
-        "An",
-        "Arame",
-        "Hanae",
-        "Harumi",
-        "Hatsuka",
-        "Hisae",
-        "Honoe",
-        "Ichi",
-        "Kazuha",
-        "Kobato",
-        "Machiko",
-        "Minori",
-        "Niji",
-        "Ran",
-        "Yumiko",
-    ]
+    arabic_woman_names = ["Saïda", "Yasmina"]
+    arabic_man_names = ["Djibril", "Younes"]
 
-    tableau_noms_homme_blanc = [
-        "Tristan",
-        "Jean",
-        "Claude",
-        "Francois",
-        "Henri",
-        "Nathan",
-        "Samuel",
-        "Yves",
-        "Quentin",
-        "Maurice",
-        "Victor",
-    ]
-    tableau_noms_femme_blanc = [
-        "Sophie",
-        "Sandrine",
-        "Laurine",
-        "Julie",
-        "Marie",
-        "Gertrude",
-        "Daniela",
-        "Victoria",
-        "Lucie",
-    ]
+    asian_woman_names = ["Hisae", "Yumiko"]
+    asian_man_names = ["Genjiro", "Ryoichi"]
 
-    tableau_noms_homme_noir = [
-        "Mamadou",
-        "Zeus",
-        "Beaurice",
-        "Ndulu",
-        "Elikia",
-        "Matuavangua",
-        "Ndandu",
-        "Tembua",
-        "Tembo",
-        "Ngondo",
-        "Amèlé",
-        "Amèdé",
-        "N'saku",
-        "Maza",
-        "Angolo",
-        "Mbuetete",
-        "Nsi",
-    ]
-    tableau_noms_femme_noir = ["Vumi", "Ima"]
+    european_woman_names = ["Marie", "Lucie"]
+    european_man_names = ["Claude", "Quentin"]
 
     nom_stat_cuisine = "stat. cuisine"
     nom_stat_nettoyage = "stat. nettoyage"
@@ -1011,7 +917,7 @@ class Constantes:
     nom_job_service = "job_service"
     nom_job_nettoyage = "job_nettoyage"
 
-    sprite_tache = "Sprites/tache.bmp"
+    sprite_tache = os.path.join(sprites_path, "restaurant", "stain.png")
 
     # chef_cuisinier:
     nom_categorie_chef_cuisinier = "chef-cuisinier"
@@ -1083,6 +989,3 @@ class Constantes:
         nom_categorie_ballayeur: "ballayeuse",
         nom_categorie_autres: "femme au foyer",
     }
-
-    nom_sprites_hommes = ["sprite_homme_0.png"]
-    nom_sprites_femmes = ["sprite_femme_0.png"]

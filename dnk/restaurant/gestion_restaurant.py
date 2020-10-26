@@ -183,7 +183,7 @@ def spawn_clients(liste_clients):
     liste_recettes_debloquees = Constantes.biblio_recettes
     liste_clients.append(
         Client(
-            get_valeur_alea(Constantes.tableau_couleurs),
+            get_valeur_alea(Constantes.ethnic_table),
             get_valeur_alea(Constantes.tableau_sexe),
             liste_recettes_debloquees,
         )

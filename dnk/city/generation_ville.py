@@ -240,7 +240,7 @@ def gen_batiments(ville):
                 ):
                     ville[x][y] = [
                         get_val_aleatoire_parmis(
-                            get_liste_sprite("sprites_ville/maisons")
+                            get_liste_sprite("city/maisons")
                         ),
                         gen_stats(Constantes.type_maison),
                     ]
@@ -252,9 +252,7 @@ def gen_batiments(ville):
                 ):
                     ville[x][y] = [
                         get_val_aleatoire_parmis(
-                            get_liste_sprite(
-                                "sprites_ville/appartements/type2"
-                            )
+                            get_liste_sprite("city/appartements/type2")
                         ),
                         gen_stats(Constantes.type_appartement_small),
                     ]
@@ -266,16 +264,14 @@ def gen_batiments(ville):
                 ):
                     ville[x][y] = [
                         get_val_aleatoire_parmis(
-                            get_liste_sprite(
-                                "sprites_ville/appartements/type3"
-                            )
+                            get_liste_sprite("city/appartements/type3")
                         ),
                         gen_stats(Constantes.type_appartement_tall),
                     ]
                 else:
                     ville[x][y] = [
                         get_val_aleatoire_parmis(
-                            get_liste_sprite("sprites_ville/grattes_ciels")
+                            get_liste_sprite("city/grattes_ciels")
                         ),
                         gen_stats(Constantes.type_buildings),
                     ]

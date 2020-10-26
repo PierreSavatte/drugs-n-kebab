@@ -34,7 +34,7 @@ class Individu:
     def get_nom(self):
         nom = None
         sprites = []
-        if self.couleur in Constantes.tableau_couleurs:
+        if self.couleur in Constantes.ethnic_table:
             if self.couleur == Constantes.nom_arabes:
                 if self.sexe == Constantes.nom_femme:
                     nom = main_fonctions.get_val_aleatoire_parmis(
@@ -86,7 +86,7 @@ class Individu:
 
     def get_tabl_sprite(self, constante_race):
         sprites = []
-        nom_sprite = "Sprites/" + constante_race + "_" + self.sexe + "_1_"
+        nom_sprite = "restaurant/" + constante_race + "_" + self.sexe + "_1_"
         for orientation in ["up", "down", "right", "left"]:
             sprites.append(nom_sprite + orientation + ".png")
         return sprites
