@@ -34,6 +34,17 @@ class RestaurantLayers(Enum):
         "collidable": False,
     }
 
+    @classmethod
+    def ordered(cls):
+        return [
+            cls.FLOOR_AND_WALLS,
+            cls.FURNITURE,
+            cls.CASH_REGISTERS,
+            cls.COOKING_STATIONS,
+            cls.CHAIRS,
+            cls.CARPETS,
+        ]
+
 
 def load_restaurant_file(restaurant_name):
     return arcade.tilemap.read_tmx(

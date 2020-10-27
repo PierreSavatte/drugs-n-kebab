@@ -1,25 +1,20 @@
 import arcade
+from arcade_curtains import BaseScene
 
-from dnk.display import PixelArtScene, exit_game
+from dnk.display import exit_game
 from dnk.display.character_sprite import CharacterSprite, Direction
 from dnk.display.load_restaurant import load_restaurant_file, RestaurantLayers
 from dnk.models.character import Character, Ethnicities, Genders
 from dnk.settings import SPRITE_SCALING
 
 
-class RestaurantScene(PixelArtScene):
+class RestaurantScene(BaseScene):
     def setup(self):
-        # Actors
-        self.actors = arcade.SpriteList()
-        self.player = CharacterSprite(
-            Character(Genders.get_random(), Ethnicities.get_random())
-        )
-        self.actors.append(self.player)
 
         # Restaurant layers (floor, walls, furniture, ...)
         restaurant = load_restaurant_file("restaurant")
         self.collidable_layers = arcade.SpriteList()
-        for layer_setting in RestaurantLayers:
+        for layer_setting in RestaurantLayers.ordered():
             layer_name = layer_setting.value["name"]
             layer = arcade.tilemap.process_layer(
                 map_object=restaurant,
@@ -29,6 +24,13 @@ class RestaurantScene(PixelArtScene):
             setattr(self, layer_name, layer)
             if layer_setting.value["collidable"]:
                 self.collidable_layers.extend(layer)
+
+        # Actors
+        self.actors = arcade.SpriteList()
+        self.player = CharacterSprite(
+            Character(Genders.MAN, Ethnicities.AFRICAN)
+        )
+        self.actors.append(self.player)
 
         # Physics engine
         self.physics_engine = arcade.PhysicsEngineSimple(
