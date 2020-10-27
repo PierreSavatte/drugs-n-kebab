@@ -1,2 +1,12 @@
+import arcade
+
+from dnk.display import Window
+
+
 def main():
-    pass
+    window = Window()
+    window.setup()
+    try:
+        arcade.run()
+    except KeyboardInterrupt:
+        pass
