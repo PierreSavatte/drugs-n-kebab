@@ -2,13 +2,19 @@ import random
 from enum import Enum
 
 
-class Ethnicities(Enum):
+class RandomlyGettable(Enum):
+    @classmethod
+    def get_random(cls):
+        return random.choice(list(cls))
+
+
+class Ethnicities(RandomlyGettable):
     AFRICAN = "african"
     FRENCH = "french"
     JAPANESE = "japanese"
 
 
-class Genders(Enum):
+class Genders(RandomlyGettable):
     WOMAN = "woman"
     MAN = "man"
 

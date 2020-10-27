@@ -5,7 +5,7 @@ from dnk.display.load_sprites import get_character_sprites, Facing
 
 @patch("arcade.load_texture")
 def test_sprite_loading_loads_character_sheet(load_texture_mocked):
-    sprite_path = "sprite/path/somewhere/to/the/sprite_sheet.bmp"
+    sprite_path = "sprite/path/somewhere/to/the/sprite_sheet.png"
     load_texture_mocked.side_effect = range(len(Facing))
 
     character_sprites = get_character_sprites(sprite_path)
