@@ -49,13 +49,3 @@ def test_character_has_name_related_to_their_ethnicity_if_no_name_given(
     selected_name = character.ETHNICITY_NAMES[ethnicity][gender][0]
 
     assert c.name == selected_name
-
-
-def test_character_has_sprite_related_to_their_ethnicity(gender, ethnicity):
-    c = character.Character(gender=gender.value, ethnicity=ethnicity.value)
-    sprites = c.sprites
-
-    assert set(c.sprites.keys()) == {"up", "down", "right", "left"}
-    for o in ["up", "down", "right", "left"]:
-        assert gender.value in sprites[o]
-        assert ethnicity.value in sprites[o]

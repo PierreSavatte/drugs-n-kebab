@@ -1,6 +1,5 @@
 import random
 from enum import Enum
-from dnk.constants import get_character_sprites_paths
 
 
 class Ethnicities(Enum):
@@ -40,7 +39,3 @@ class Character:
         e = Ethnicities(self.ethnicity)
         g = Genders(self.gender)
         return random.choice(ETHNICITY_NAMES[e][g])
-
-    @property
-    def sprites(self):
-        return get_character_sprites_paths(self.ethnicity, self.gender)

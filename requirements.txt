@@ -1,1 +1,2 @@
-pygame==1.9.6
+arcade==2.4.3
+arcade_curtains==0.2.2
