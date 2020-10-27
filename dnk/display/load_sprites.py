@@ -3,7 +3,10 @@ import os
 
 import arcade
 
-from dnk.settings import ORIGINAL_SPRITE_WIDTH, ORIGINAL_SPRITE_HEIGHT
+from dnk.settings import (
+    ORIGINAL_SPRITE_WIDTH,
+    ORIGINAL_CHARACTER_SPRITE_HEIGHT,
+)
 
 root_path = os.path.dirname(os.path.abspath(__file__))
 resources_path = os.path.join(root_path, "..", "resources")
@@ -41,7 +44,7 @@ def get_character_sprites(sprite_path):
     params = {
         "y": 0,
         "width": ORIGINAL_SPRITE_WIDTH,
-        "height": ORIGINAL_SPRITE_HEIGHT,
+        "height": ORIGINAL_CHARACTER_SPRITE_HEIGHT,
     }
     for x, (facing, facing_mirror) in zip(
         range(0, 112, ORIGINAL_SPRITE_WIDTH), FACING_ORDER_AND_MIRROR.items()
