@@ -2,6 +2,8 @@ language: python
 python:
 - '3.7.9'
 cache: pip
+before_install:
+- sudo apt-get -y install mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev
 install:
 - pip install -r requirements-dev.txt
 - pip install -e .
