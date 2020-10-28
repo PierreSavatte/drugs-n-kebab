@@ -1,5 +1,6 @@
 import pytest
 import arcade
+from arcade_curtains import event
 
 from unittest.mock import patch
 
@@ -67,24 +68,52 @@ def test_restaurant_scene_holds_player(restaurant):
     assert restaurant_scene.player in restaurant_scene.actors
 
 
-def test_player_can_move_in_restaurant(restaurant):
+def test_player_can_start_moving_in_restaurant(restaurant):
     restaurant_scene = RestaurantScene(restaurant)
     assert (
-        restaurant_scene.player.move,
+        restaurant_scene.player.start_moving,
         {"direction": Direction.UP.value},
-    ) in restaurant_scene.events.handlers[arcade.key.W]
+    ) in restaurant_scene.events.handlers[(event.Event.KEY_DOWN, arcade.key.W)]
     assert (
-        restaurant_scene.player.move,
+        restaurant_scene.player.start_moving,
         {"direction": Direction.DOWN.value},
-    ) in restaurant_scene.events.handlers[arcade.key.S]
+    ) in restaurant_scene.events.handlers[(event.Event.KEY_DOWN, arcade.key.S)]
     assert (
-        restaurant_scene.player.move,
+        restaurant_scene.player.start_moving,
         {"direction": Direction.LEFT.value},
-    ) in restaurant_scene.events.handlers[arcade.key.A]
+    ) in restaurant_scene.events.handlers[(event.Event.KEY_DOWN, arcade.key.A)]
     assert (
-        restaurant_scene.player.move,
+        restaurant_scene.player.start_moving,
         {"direction": Direction.RIGHT.value},
-    ) in restaurant_scene.events.handlers[arcade.key.D]
+    ) in restaurant_scene.events.handlers[(event.Event.KEY_DOWN, arcade.key.D)]
+
+
+def test_player_can_stop_moving_in_restaurant(restaurant):
+    restaurant_scene = RestaurantScene(restaurant)
+    assert (
+        restaurant_scene.player.stop_moving,
+        {"direction": Direction.UP.value},
+    ) in restaurant_scene.events.handlers[(event.Event.KEY_UP, arcade.key.W)]
+    assert (
+        restaurant_scene.player.stop_moving,
+        {"direction": Direction.DOWN.value},
+    ) in restaurant_scene.events.handlers[(event.Event.KEY_UP, arcade.key.S)]
+    assert (
+        restaurant_scene.player.stop_moving,
+        {"direction": Direction.LEFT.value},
+    ) in restaurant_scene.events.handlers[(event.Event.KEY_UP, arcade.key.A)]
+    assert (
+        restaurant_scene.player.stop_moving,
+        {"direction": Direction.RIGHT.value},
+    ) in restaurant_scene.events.handlers[(event.Event.KEY_UP, arcade.key.D)]
+
+
+def test_character_sprite_keeps_walking_every_frame(restaurant):
+    restaurant_scene = RestaurantScene(restaurant)
+    assert (
+        restaurant_scene.player.update,
+        {},
+    ) in restaurant_scene.events.handlers[event.Event.FRAME]
 
 
 def test_restaurant_scene_holds_all_the_layers(restaurant):

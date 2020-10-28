@@ -21,7 +21,7 @@ class RestaurantScene(BaseScene):
         )
         self.widget.register(self.sprites)
 
-        self.events.key(arcade.key.ESCAPE, exit_game)
+        self.events.key_down(arcade.key.ESCAPE, exit_game)
 
     def enter_scene(self, previous_scene):
         arcade.set_background_color(arcade.color.WHITE)
@@ -73,7 +73,14 @@ class RestaurantWidget(Widget):
             (arcade.key.D, Direction.RIGHT),
             (arcade.key.A, Direction.LEFT),
         ]:
-            events.key(key, self.player.move, {"direction": direction.value})
+            events.key_down(
+                key, self.player.start_moving, {"direction": direction.value}
+            )
+            events.key_up(
+                key, self.player.stop_moving, {"direction": direction.value}
+            )
+
+        events.frame(self.player.update)
 
     @property
     def walkable_zone(self):
