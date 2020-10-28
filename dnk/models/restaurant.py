@@ -1,6 +1,9 @@
 from enum import Enum
+import time
 
 from dnk.models import RandomlyInitialisable
+from dnk.models.order import Order
+from dnk.settings import ORDER_FREQUENCY
 
 
 class RestaurantSizeType(Enum):
@@ -22,3 +25,12 @@ class Restaurant(RandomlyInitialisable):
     def __init__(self, size_type):
         self.size_type = size_type
         self.size = SIZE_SIZE_TYPE_MAPPING[size_type]
+
+        self.last_ts_received_order = 0
+        self.orders = []
+
+    def update(self):
+        now = time.time()
+        if now >= self.last_ts_received_order + ORDER_FREQUENCY:
+            self.last_ts_received_order = now
+            self.orders.append(Order.get_random())

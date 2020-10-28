@@ -108,12 +108,19 @@ def test_player_can_stop_moving_in_restaurant(restaurant):
     ) in restaurant_scene.events.handlers[(event.Event.KEY_UP, arcade.key.D)]
 
 
-def test_character_sprite_keeps_walking_every_frame(restaurant):
+@patch("dnk.display.character_sprite.CharacterSprite.update")
+def test_character_sprite_keeps_walking_every_frame(
+    character_sprite_update_method, restaurant
+):
     restaurant_scene = RestaurantScene(restaurant)
     assert (
-        restaurant_scene.player.update,
+        restaurant_scene.update_at_each_frame,
         {},
     ) in restaurant_scene.events.handlers[event.Event.FRAME]
+
+    restaurant_scene.update_at_each_frame()
+
+    character_sprite_update_method.assert_called_once()
 
 
 def test_restaurant_scene_holds_all_the_layers(restaurant):
@@ -135,3 +142,18 @@ def test_restaurant_scene_define_good_layers_as_collidable(restaurant):
             *restaurant_scene.furniture,
         ]
     )
+
+
+@patch("dnk.models.restaurant.Restaurant.update")
+def test_restaurant_scene_update_at_frame_calls_restaurant_update(
+    restaurant_update_method, restaurant
+):
+    restaurant_scene = RestaurantScene(restaurant)
+    assert (
+        restaurant_scene.update_at_each_frame,
+        {},
+    ) in restaurant_scene.events.handlers[event.Event.FRAME]
+
+    restaurant_scene.update_at_each_frame()
+
+    restaurant_update_method.assert_called_once()

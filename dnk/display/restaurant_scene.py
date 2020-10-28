@@ -37,6 +37,10 @@ class RestaurantScene(BaseScene):
 
 
 class RestaurantWidget(Widget):
+    def update_at_each_frame(self, *args, **kwargs):
+        self.player.update()
+        self.restaurant.update()
+
     def setup_widget(self, restaurant=None, events=None):
         self.restaurant = restaurant
 
@@ -78,7 +82,7 @@ class RestaurantWidget(Widget):
                 key, self.player.stop_moving, {"direction": direction.value}
             )
 
-        events.frame(self.player.update)
+        events.frame(self.update_at_each_frame)
 
     @property
     def walkable_zone(self):

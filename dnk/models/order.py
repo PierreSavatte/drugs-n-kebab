@@ -1,7 +1,8 @@
+import random
 from enum import Enum
 
-from dnk.settings import PREPARATION_TIME_UNIT
 from dnk.models import RandomlyInitialisable
+from dnk.settings import PREPARATION_TIME_UNIT
 
 
 class Ingredients(Enum):
@@ -13,7 +14,7 @@ class Ingredients(Enum):
     POTATO = "potato"
 
 
-class CommandTypes(Enum):
+class OrderTypes(Enum):
     KEBAB = {
         "name": "kebab",
         "base_preparation_time": 4 * PREPARATION_TIME_UNIT,
@@ -38,11 +39,15 @@ class CommandTypes(Enum):
     }
 
 
-class Command(RandomlyInitialisable):
-    expected_enums_at_init = [CommandTypes]
+class Order(RandomlyInitialisable):
+    expected_enums_at_init = [OrderTypes]
 
-    def __init__(self, command_type):
-        values = command_type.value
+    def __init__(self, order_type, quantity=None):
+        values = order_type.value
         self.name = values["name"]
         self.base_preparation_time = values["base_preparation_time"]
         self.recipe = values["recipe"]
+
+        if not quantity:
+            quantity = random.randint(1, 5)
+        self.quantity = quantity
