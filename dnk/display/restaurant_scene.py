@@ -33,7 +33,7 @@ class RestaurantScene(BaseScene):
         # Actors
         self.actors = arcade.SpriteList()
         self.player = CharacterSprite(
-            Character(Genders.MAN, Ethnicities.AFRICAN)
+            Character(Genders.get_random(), Ethnicities.get_random())
         )
         self.actors.append(self.player)
 
