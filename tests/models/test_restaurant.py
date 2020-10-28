@@ -9,10 +9,10 @@ def test_restaurant_has_different_sizes(restaurant_size_type):
     assert r.size_type == restaurant_size_type
 
 
-def test_get_random_restaurant_size():
+def test_get_random_restaurant():
     assert isinstance(
-        restaurant.RestaurantSizeType.get_random(),
-        restaurant.RestaurantSizeType,
+        restaurant.Restaurant.get_random(),
+        restaurant.Restaurant,
     )
 
 

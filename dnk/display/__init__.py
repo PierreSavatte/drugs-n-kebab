@@ -19,7 +19,7 @@ class Window(arcade.Window):
 
         self.curtains.add_scene(
             "restaurant",
-            RestaurantScene(Restaurant(RestaurantSizeType.get_random())),
+            RestaurantScene(Restaurant.get_random()),
         )
 
     def setup(self):
@@ -28,4 +28,4 @@ class Window(arcade.Window):
 
 from .restaurant_scene import RestaurantScene
 
-from dnk.models.restaurant import Restaurant, RestaurantSizeType
+from dnk.models.restaurant import Restaurant

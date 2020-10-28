@@ -1,8 +1,12 @@
 import random
-from enum import Enum
 
 
-class RandomlyGettableEnum(Enum):
+class RandomlyInitialisable:
+    expected_enums_at_init = []
+
     @classmethod
     def get_random(cls):
-        return random.choice(list(cls))
+        values = [
+            random.choice(list(enum)) for enum in cls.expected_enums_at_init
+        ]
+        return cls(*values)

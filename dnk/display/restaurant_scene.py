@@ -59,9 +59,7 @@ class RestaurantWidget(Widget):
 
         # Actors
         self.actors = arcade.SpriteList()
-        self.player = CharacterSprite(
-            Character(Genders.get_random(), Ethnicities.get_random()), self
-        )
+        self.player = CharacterSprite(Character.get_random(), self)
         self.actors.append(self.player)
 
         self.sprites.extend(self.actors)
