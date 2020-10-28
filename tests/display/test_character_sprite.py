@@ -1,16 +1,18 @@
 import os
 
+from unittest.mock import patch
 import pytest
 
+from dnk.settings import SPRITE_HEIGHT
 from dnk.display.character_sprite import (
     CharacterSprite,
     Direction,
     Facing,
     MOVEMENT_ANIMATION_DURATION,
 )
+from dnk.display.restaurant_scene import RestaurantScene
 from dnk.models.character import Character
 from dnk.models.restaurant import Restaurant, RestaurantSizeType
-from dnk.display.restaurant_scene import RestaurantScene
 
 
 @pytest.fixture
@@ -47,15 +49,15 @@ def test_character_sprite_has_walking_animation(character, restaurant_scene):
         Facing.DOWN, (x + 10, y + 10)
     )
 
-    for time, facing, moving_mode in [
-        (0, Facing.W_DOWN, True),
+    for time, facing, finished_moving in [
+        (0, Facing.W_DOWN, None),
         (MOVEMENT_ANIMATION_DURATION / 2, Facing.W_DOWN_BIS, None),
-        (MOVEMENT_ANIMATION_DURATION, Facing.DOWN, False),
+        (MOVEMENT_ANIMATION_DURATION, Facing.DOWN, True),
     ]:
         callback_kwargs = walking_animation.callbacks[time].keywords
         expected_kwargs = {"new_facing": facing}
-        if moving_mode is not None:
-            expected_kwargs["moving_mode"] = moving_mode
+        if finished_moving is not None:
+            expected_kwargs["finished_moving"] = finished_moving
         assert callback_kwargs == expected_kwargs
 
 
@@ -74,16 +76,17 @@ def test_character_sprite_animation_moves_sprite(character, restaurant_scene):
     )
 
 
-def test_character_sprite_can_not_move_if_already_in_moving_mode(
+def test_character_sprite_can_change_direction_if_one_already_started(
     character, restaurant_scene
 ):
     sprite = CharacterSprite(character, restaurant_scene)
     x, y = sprite.position
-    sprite.moving_mode = True
+    sprite.already_moving = True
+    sprite.direction = Direction.DOWN.value
 
-    sprite.move(Direction.DOWN.value)
+    sprite.start_moving(Direction.UP.value)
 
-    assert sprite.position == (x, y)
+    assert sprite.direction == Direction.UP.value
 
 
 def test_character_sprite_must_be_init_with_restaurant(
@@ -108,43 +111,36 @@ def test_character_sprite_can_say_if_its_insite_the_restaurant(
     assert not sprite.is_inside_restaurant()
 
 
-# def test_character_sprite_cannot_walk_outside_the_restaurant(
-#     character, restaurant_scene
-# ):
-#     import arcade
-#     import arcade_curtains
-#
-#     curtains = arcade_curtains.Curtains()
-#     w = arcade.Window()
-#     curtains.bind(w)
-#     curtains.add_scene("restaurant_scene", restaurant_scene)
-#     curtains.set_scene("restaurant_scene")
-#
-#     (min_x, min_y), (max_x, max_y) = restaurant_scene.walkable_zone
-#
-#     sprite = CharacterSprite(character, restaurant_scene)
-#
-#     # (max_x, max_y)
-#     sprite.position = max_x, max_y
-#
-#     # 1
-#     sprite.move(Direction.RIGHT.value)
-#     assert sprite.position == (max_x, max_y)
-#
-#     # 2
-#     sprite.move(Direction.UP.value)
-#     assert sprite.position == (max_x, max_y)
-#
-#     # (max_x, max_y)
-#     sprite.position = min_x, min_y
-#
-#     # 3
-#     sprite.move(Direction.LEFT.value)
-#     assert sprite.position == (min_x, min_y)
-#
-#     # 4
-#     sprite.move(Direction.DOWN.value)
-#     assert sprite.position == (min_x, min_y)
+@pytest.mark.parametrize(
+    "direction_value, postion_start_name",
+    [
+        [Direction.RIGHT.value, "topright"],
+        [Direction.UP.value, "topright"],
+        [Direction.LEFT.value, "bottomleft"],
+        [Direction.DOWN.value, "bottomleft"],
+    ],
+)
+@patch("dnk.display.character_sprite.CharacterSprite._get_walking_animation")
+@patch("arcade.get_window")
+def test_character_sprite_cannot_walk_outside_the_restaurant(
+    _,
+    get_walking_animation_mocked,
+    direction_value,
+    postion_start_name,
+    character,
+    restaurant_scene,
+):
+    postion_start = getattr(restaurant_scene, postion_start_name)
+
+    sprite = CharacterSprite(character, restaurant_scene)
+
+    sprite.position = postion_start
+
+    sprite.start_moving(direction=direction_value)
+    sprite.update()
+    get_walking_animation_mocked.assert_called_with(
+        direction_value["facing"], postion_start
+    )
 
 
 def test_character_sprite_spawns_at_a_carpet_position(
@@ -155,3 +151,42 @@ def test_character_sprite_spawns_at_a_carpet_position(
     assert sprite.center_x in [
         carpet.center_x for carpet in restaurant_scene.carpets
     ]
+
+
+@patch("dnk.display.character_sprite.CharacterSprite._get_walking_animation")
+@patch("arcade.get_window")
+def test_character_sprite_can_start_moving(
+    _, get_walking_animation_mocked, character, restaurant_scene
+):
+    sprite = CharacterSprite(character, restaurant_scene)
+
+    start_x, start_y = sprite.position
+
+    sprite.start_moving(direction=Direction.UP.value)
+
+    # Should be called each frame to update the walking process
+    sprite.update()
+
+    get_walking_animation_mocked.assert_called_with(
+        Facing.UP, (start_x, start_y + SPRITE_HEIGHT)
+    )
+
+
+@patch("dnk.display.character_sprite.CharacterSprite._get_walking_animation")
+@patch("arcade.get_window")
+def test_character_sprite_can_stop_moving(
+    _, get_walking_animation_mocked, character, restaurant_scene
+):
+    sprite = CharacterSprite(character, restaurant_scene)
+
+    start_x, start_y = sprite.position
+    # Tell sprite to go in a direction
+    sprite.direction = Direction.UP.value
+
+    # Stop the movement before init it (in the update)
+    sprite.stop_moving(direction=Direction.UP.value)
+
+    # Should be called each frame to update the walking process
+    sprite.update()
+
+    get_walking_animation_mocked.assert_not_called()

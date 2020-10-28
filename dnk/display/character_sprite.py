@@ -28,6 +28,14 @@ class Direction(enum.Enum):
     LEFT = {"movement": (-SPRITE_WIDTH, 0), "facing": Facing.LEFT}
 
 
+KEY_MAPPING = {
+    arcade.key.W: Direction.UP,
+    arcade.key.S: Direction.DOWN,
+    arcade.key.D: Direction.RIGHT,
+    arcade.key.A: Direction.LEFT,
+}
+
+
 class CharacterSprite(arcade.Sprite):
     def __init__(self, model_character, restaurant_scene):
         super().__init__()
@@ -59,7 +67,8 @@ class CharacterSprite(arcade.Sprite):
         )
 
         self.facing_sprites = get_character_sprites(self.sprite_path)
-        self.moving_mode = False
+        self.direction = None
+        self.already_moving = False
         self.update_facing(Facing.UP)
 
         self.scale = SPRITE_SCALING
@@ -68,12 +77,14 @@ class CharacterSprite(arcade.Sprite):
         self.bottom = restaurant_scene.bottom
         self.center_x = carpet.center_x
 
-    def _update_walking(self, new_facing, moving_mode=None):
+    def _update_walking(self, new_facing, finished_moving=False):
+        print("_update_walking: finished_moving=", finished_moving)
         self.update_facing(new_facing)
-        if moving_mode is not None:
-            self.moving_mode = moving_mode
+        if finished_moving:
+            self.already_moving = False
 
     def _get_walking_animation(self, facing, new_pos):
+        print("_get_walking_animation")
         # Get intermediary facing
         walking_facing_1 = Facing["_".join(["W", facing.name])]
         walking_facing_2 = Facing["_".join([walking_facing_1.name, "BIS"])]
@@ -81,7 +92,7 @@ class CharacterSprite(arcade.Sprite):
         seq = arcade_curtains.Sequence.from_sprite(self)
         # At 0, Start moving mode and set 1st walking sprite
         seq[0].callback = partial(
-            self._update_walking, new_facing=walking_facing_1, moving_mode=True
+            self._update_walking, new_facing=walking_facing_1
         )
         # In the middle, set 2nd walking sprite
         seq[MOVEMENT_ANIMATION_DURATION / 2].callback = partial(
@@ -89,7 +100,7 @@ class CharacterSprite(arcade.Sprite):
         )
         # At the end, finish moving mode and set facing asked
         seq[MOVEMENT_ANIMATION_DURATION].callback = partial(
-            self._update_walking, new_facing=facing, moving_mode=False
+            self._update_walking, new_facing=facing, finished_moving=True
         )
         # At the end, the sprite will be at the new_pos
         seq[MOVEMENT_ANIMATION_DURATION].frame = arcade_curtains.KeyFrame(
@@ -118,10 +129,13 @@ class CharacterSprite(arcade.Sprite):
         self.position = old_position
         return sprites_collide
 
-    def move(self, direction):
-        if not self.moving_mode:
-            delta_x, delta_y = direction["movement"]
-            new_facing = direction["facing"]
+    def continue_moving(self):
+        # Triggers animation only if not already moving and
+        # direction not yet erased
+        if not self.already_moving and self.direction:
+            self.already_moving = True
+            delta_x, delta_y = self.direction["movement"]
+            new_facing = self.direction["facing"]
 
             x, y = self.position
             new_pos = x + delta_x, y + delta_y
@@ -131,9 +145,21 @@ class CharacterSprite(arcade.Sprite):
                 alt_pos=new_pos
             ) or self.will_collide_with_list(new_pos):
                 new_pos = self.position
+            print("self.position=", self.position)
+            print("new_pos=", new_pos)
 
             self.animate(self._get_walking_animation(new_facing, new_pos))
+
+    def start_moving(self, direction):
+        self.direction = direction
+
+    def stop_moving(self, direction):
+        if self.direction == direction:
+            self.direction = None
 
     def update_facing(self, new_facing):
         self.facing = new_facing
         self.texture = self.facing_sprites[new_facing]
+
+    def update(self, *args, **kwargs):
+        self.continue_moving()
