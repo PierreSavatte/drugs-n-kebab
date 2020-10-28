@@ -16,10 +16,15 @@ class Window(arcade.Window):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
         self.curtains = Curtains(self, draw_kwargs={"filter": gl.GL_NEAREST})
 
-        self.curtains.add_scene("restaurant", RestaurantScene())
+        self.curtains.add_scene(
+            "restaurant",
+            RestaurantScene(Restaurant(RestaurantSize.get_random())),
+        )
 
     def setup(self):
         self.curtains.set_scene("restaurant")
 
 
-from .restaurant import RestaurantScene
+from .restaurant_scene import RestaurantScene
+
+from dnk.models.restaurant import Restaurant, RestaurantSize

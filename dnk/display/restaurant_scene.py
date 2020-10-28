@@ -9,10 +9,15 @@ from dnk.settings import SPRITE_SCALING
 
 
 class RestaurantScene(BaseScene):
-    def setup(self):
+    def __init__(self, restaurant, *args, **kwargs):
+        self.restaurant = restaurant
+        super().__init__(*args, **kwargs)
 
+    def setup(self):
         # Restaurant layers (floor, walls, furniture, ...)
-        restaurant = load_restaurant_file("restaurant")
+        restaurant = load_restaurant_file(
+            f"{self.restaurant.size.value}_restaurant"
+        )
         self.collidable_layers = arcade.SpriteList()
         for layer_setting in RestaurantLayers.ordered():
             layer_name = layer_setting.value["name"]

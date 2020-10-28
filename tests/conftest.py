@@ -1,6 +1,7 @@
 import pytest
 
 from dnk.models import character
+from dnk.models import restaurant
 
 
 @pytest.fixture(
@@ -19,4 +20,15 @@ def ethnicity(request):
     ids=[f"Gender={gender.name}" for gender in list(character.Genders)],
 )
 def gender(request):
+    return request.param
+
+
+@pytest.fixture(
+    params=list(restaurant.RestaurantSize),
+    ids=[
+        f"RestaurantSize={restaurant_size.name}"
+        for restaurant_size in list(restaurant.RestaurantSize)
+    ],
+)
+def restaurant_size(request):
     return request.param
