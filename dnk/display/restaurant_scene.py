@@ -43,11 +43,6 @@ class RestaurantScene(BaseScene):
         )
         self.actors.append(self.player)
 
-        # # Physics engine
-        # self.physics_engine = arcade.PhysicsEngineSimple(
-        #     self.player, self.collidable_layers
-        # )
-
         # Event to allow player to walk
         for key, direction in [
             (arcade.key.W, Direction.UP),
