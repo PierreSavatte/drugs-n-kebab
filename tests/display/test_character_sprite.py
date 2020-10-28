@@ -145,3 +145,11 @@ def test_character_sprite_can_say_if_its_insite_the_restaurant(
 #     # 4
 #     sprite.move(Direction.DOWN.value)
 #     assert sprite.position == (min_x, min_y)
+
+
+def test_character_sprite_spawns_at_a_carpet_position(
+    character, restaurant_scene
+):
+    sprite = CharacterSprite(character, restaurant_scene)
+
+    assert sprite.position in restaurant_scene.carpets_positions

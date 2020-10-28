@@ -70,5 +70,9 @@ class RestaurantScene(BaseScene):
             for layer_setting in list(RestaurantLayers)
         }
 
+    @property
+    def carpets_positions(self):
+        return [carpet_sprite.position for carpet_sprite in self.carpets]
+
     def enter_scene(self, previous_scene):
         arcade.set_background_color(arcade.color.WHITE)

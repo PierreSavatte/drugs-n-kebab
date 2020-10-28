@@ -1,5 +1,6 @@
 import enum
 import os
+import random
 from functools import partial
 
 import arcade
@@ -14,8 +15,6 @@ from dnk.settings import (
     SPRITE_HEIGHT,
     SPRITE_WIDTH,
     SPRITE_SCALING,
-    SCREEN_WIDTH,
-    SCREEN_HEIGHT,
     MOVEMENT_ANIMATION_DURATION,
 )
 
@@ -45,8 +44,7 @@ class CharacterSprite(arcade.Sprite):
         self.update_facing(Facing.UP)
 
         self.scale = SPRITE_SCALING
-        self.bottom = 0
-        self.left = 0
+        self.position = random.choice(restaurant_scene.carpets_positions)
 
     def _update_walking(self, new_facing, moving_mode=None):
         self.update_facing(new_facing)
