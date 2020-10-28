@@ -65,7 +65,7 @@ class CharacterSprite(arcade.Sprite):
         self.scale = SPRITE_SCALING
 
         carpet = random.choice(restaurant_scene.carpets)
-        self.bottom = 0
+        self.bottom = restaurant_scene.bottom
         self.center_x = carpet.center_x
 
     def _update_walking(self, new_facing, moving_mode=None):
@@ -105,7 +105,7 @@ class CharacterSprite(arcade.Sprite):
 
         (min_x, min_y), (max_x, max_y) = self.restaurant_scene.walkable_zone
 
-        return min_x <= x < max_x and min_y <= y < max_y
+        return min_x < x < max_x and min_y < y < max_y
 
     def will_collide_with_list(self, new_pos):
         import copy

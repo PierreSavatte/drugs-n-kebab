@@ -3,7 +3,12 @@ import arcade
 
 from unittest.mock import patch
 
-from dnk.settings import SPRITE_HEIGHT, SPRITE_WIDTH
+from dnk.settings import (
+    SPRITE_HEIGHT,
+    SPRITE_WIDTH,
+    SCREEN_HEIGHT,
+    SCREEN_WIDTH,
+)
 from dnk.models.restaurant import Restaurant
 from dnk.display.restaurant_scene import RestaurantScene
 from dnk.display.character_sprite import CharacterSprite, Direction
@@ -21,16 +26,21 @@ def test_restaurant_scene_takes_a_model_to_be_init(restaurant):
     assert restaurant_scene.restaurant == restaurant
 
 
-def test_restaurant_scene_has_size_defined_based_on_restaurant_size(
+def test_restaurant_scene_has_walkable_zone_defined_based_on_restaurant_size_and_position(
     restaurant,
 ):
     x, y = restaurant.size
 
     restaurant_scene = RestaurantScene(restaurant)
 
+    half_restaurant_width = (y * SPRITE_WIDTH) // 2
+    half_restaurant_height = (x * SPRITE_HEIGHT) // 2
+
+    center_x, center_y = SCREEN_HEIGHT // 2, SCREEN_WIDTH // 2
+
     assert restaurant_scene.walkable_zone == (
-        (0, 0),
-        (x * SPRITE_HEIGHT, y * SPRITE_WIDTH),
+        (center_x - half_restaurant_width, center_y - half_restaurant_height),
+        (center_x + half_restaurant_width, center_y + half_restaurant_height),
     )
 
 
