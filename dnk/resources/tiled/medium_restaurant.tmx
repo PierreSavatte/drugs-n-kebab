@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="15" height="15" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="214">
+ <tileset firstgid="1" source="furniture.tsx"/>
+ <layer id="1" name="floor_and_walls" width="15" height="15">
+  <data encoding="csv">
+71,71,71,71,71,71,71,71,71,71,71,71,71,71,71,
+72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,
+72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,
+72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,
+72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,
+72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,
+72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,
+72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,
+72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,
+72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,
+72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,
+72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,
+72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,
+72,72,72,72,72,72,72,72,72,72,72,72,72,72,72,
+72,72,72,72,72,72,72,72,72,72,72,72,72,72,72
+</data>
+ </layer>
+ <objectgroup id="2" name="furniture">
+  <object id="57" gid="13" x="0" y="32" width="16" height="16"/>
+  <object id="58" gid="11" x="16" y="32" width="16" height="16"/>
+  <object id="59" gid="2" x="32" y="16" width="16" height="16"/>
+  <object id="60" gid="2" x="48" y="16" width="16" height="16"/>
+  <object id="61" gid="11" x="64" y="32" width="16" height="16"/>
+  <object id="62" gid="12" x="64" y="32" width="16" height="16"/>
+  <object id="63" gid="11" x="80" y="32" width="16" height="16"/>
+  <object id="64" gid="13" x="96" y="32" width="16" height="16"/>
+  <object id="65" gid="41" x="112" y="48" width="16" height="16"/>
+  <object id="66" gid="41" x="112" y="64" width="16" height="16"/>
+  <object id="67" gid="41" x="112" y="80" width="16" height="16"/>
+  <object id="68" gid="34" x="112" y="32" width="16" height="16"/>
+  <object id="69" gid="31" x="96" y="96" width="16" height="16"/>
+  <object id="70" gid="31" x="64" y="96" width="16" height="16"/>
+  <object id="71" gid="33" x="112" y="96" width="16" height="16"/>
+  <object id="72" gid="32" x="0" y="96" width="16" height="16"/>
+  <object id="73" gid="51" x="224" y="64" width="16" height="16"/>
+  <object id="74" gid="51" x="224" y="32" width="16" height="16"/>
+  <object id="76" gid="51" x="224" y="96" width="16" height="16"/>
+  <object id="79" gid="51" x="224" y="160" width="16" height="16"/>
+  <object id="80" gid="51" x="224" y="224" width="16" height="16"/>
+  <object id="84" gid="51" x="16" y="160" width="16" height="16"/>
+  <object id="85" gid="51" x="16" y="192" width="16" height="16"/>
+  <object id="86" gid="51" x="16" y="224" width="16" height="16"/>
+  <object id="98" gid="51" x="160" y="32" width="16" height="16"/>
+  <object id="99" gid="51" x="160" y="64" width="16" height="16"/>
+  <object id="100" gid="51" x="160" y="160" width="16" height="16"/>
+  <object id="101" gid="51" x="144" y="160" width="16" height="16"/>
+  <object id="102" gid="51" x="160" y="224" width="16" height="16"/>
+  <object id="103" gid="51" x="144" y="224" width="16" height="16"/>
+  <object id="106" gid="1073741856" x="48" y="80" width="16" height="16" rotation="180"/>
+  <object id="107" gid="51" x="96" y="160" width="16" height="16"/>
+  <object id="108" gid="51" x="96" y="224" width="16" height="16"/>
+  <object id="112" gid="51" x="160" y="96" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup id="3" name="cash_registers">
+  <object id="115" gid="21" x="80" y="96" width="16" height="16"/>
+  <object id="116" gid="21" x="48" y="96" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup id="4" name="cooking_stations">
+  <object id="119" gid="1" x="32" y="32" width="16" height="16"/>
+  <object id="120" gid="12" x="48" y="32" width="16" height="16"/>
+  <object id="121" gid="1" x="48" y="32" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup id="5" name="chairs">
+  <object id="122" gid="63" x="144" y="64" width="16" height="16"/>
+  <object id="123" gid="63" x="144" y="32" width="16" height="16"/>
+  <object id="124" gid="63" x="208" y="96" width="16" height="16"/>
+  <object id="125" gid="63" x="208" y="64" width="16" height="16"/>
+  <object id="126" gid="63" x="208" y="32" width="16" height="16"/>
+  <object id="130" gid="63" x="208" y="160" width="16" height="16"/>
+  <object id="131" gid="63" x="208" y="224" width="16" height="16"/>
+  <object id="132" gid="63" x="0" y="160" width="16" height="16"/>
+  <object id="133" gid="63" x="0" y="192" width="16" height="16"/>
+  <object id="134" gid="63" x="0" y="224" width="16" height="16"/>
+  <object id="138" gid="63" x="128" y="224" width="16" height="16"/>
+  <object id="139" gid="63" x="128" y="160" width="16" height="16"/>
+  <object id="147" gid="1073741887" x="192" y="48" width="16" height="16" rotation="180"/>
+  <object id="148" gid="1073741887" x="192" y="16" width="16" height="16" rotation="180"/>
+  <object id="161" gid="1073741887" x="192" y="208" width="16" height="16" rotation="180"/>
+  <object id="162" gid="1073741887" x="192" y="144" width="16" height="16" rotation="180"/>
+  <object id="163" gid="1073741887" x="48" y="144" width="16" height="16" rotation="180"/>
+  <object id="164" gid="1073741887" x="48" y="176" width="16" height="16" rotation="180"/>
+  <object id="165" gid="1073741887" x="48" y="208" width="16" height="16" rotation="180"/>
+  <object id="170" gid="61" x="224" y="144" width="16" height="16"/>
+  <object id="172" gid="61" x="160" y="144" width="16" height="16"/>
+  <object id="173" gid="61" x="144" y="144" width="16" height="16"/>
+  <object id="174" gid="61" x="144" y="208" width="16" height="16"/>
+  <object id="175" gid="61" x="160" y="208" width="16" height="16"/>
+  <object id="189" gid="62" x="160" y="176" width="16" height="16"/>
+  <object id="190" gid="62" x="144" y="176" width="16" height="16"/>
+  <object id="191" gid="62" x="160" y="240" width="16" height="16"/>
+  <object id="192" gid="62" x="144" y="240" width="16" height="16"/>
+  <object id="197" gid="62" x="224" y="240" width="16" height="16"/>
+  <object id="200" gid="61" x="96" y="144" width="16" height="16"/>
+  <object id="201" gid="61" x="96" y="208" width="16" height="16"/>
+  <object id="204" gid="62" x="96" y="240" width="16" height="16"/>
+  <object id="205" gid="62" x="96" y="176" width="16" height="16"/>
+  <object id="206" gid="63" x="144" y="96" width="16" height="16"/>
+  <object id="207" gid="1073741887" x="192" y="80" width="16" height="16" rotation="180"/>
+  <object id="210" gid="61" x="224" y="208" width="16" height="16"/>
+  <object id="212" gid="62" x="224" y="176" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup id="6" name="carpets">
+  <object id="213" gid="74" x="64" y="240" width="16" height="16"/>
+ </objectgroup>
+</map>
