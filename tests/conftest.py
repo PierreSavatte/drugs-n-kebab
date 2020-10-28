@@ -24,11 +24,11 @@ def gender(request):
 
 
 @pytest.fixture(
-    params=list(restaurant.RestaurantSize),
+    params=list(restaurant.RestaurantSizeType),
     ids=[
         f"RestaurantSize={restaurant_size.name}"
-        for restaurant_size in list(restaurant.RestaurantSize)
+        for restaurant_size in list(restaurant.RestaurantSizeType)
     ],
 )
-def restaurant_size(request):
+def restaurant_size_type(request):
     return request.param

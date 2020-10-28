@@ -1,15 +1,15 @@
 import random
 
-from dnk.models import RandomlyGettable
+from dnk.models import RandomlyGettableEnum
 
 
-class Ethnicities(RandomlyGettable):
+class Ethnicities(RandomlyGettableEnum):
     AFRICAN = "african"
     FRENCH = "french"
     JAPANESE = "japanese"
 
 
-class Genders(RandomlyGettable):
+class Genders(RandomlyGettableEnum):
     WOMAN = "woman"
     MAN = "man"
 

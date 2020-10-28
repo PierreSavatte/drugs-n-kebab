@@ -28,8 +28,9 @@ class Direction(enum.Enum):
 
 
 class CharacterSprite(arcade.Sprite):
-    def __init__(self, model_character):
+    def __init__(self, model_character, restaurant_scene):
         super().__init__()
+        self.restaurant_scene = restaurant_scene
 
         self.sprite_path = os.path.join(
             sprites_path,
@@ -76,6 +77,16 @@ class CharacterSprite(arcade.Sprite):
         )
         return seq
 
+    def is_inside_restaurant(self, alt_pos=None):
+        # Get position
+        if alt_pos is None:
+            alt_pos = self.position
+        x, y = alt_pos
+
+        (min_x, min_y), (max_x, max_y) = self.restaurant_scene.walkable_zone
+
+        return min_x <= x < max_x and min_y <= y < max_y
+
     def move(self, direction):
         if not self.moving_mode:
             delta_x, delta_y = direction["movement"]
@@ -85,7 +96,7 @@ class CharacterSprite(arcade.Sprite):
             new_x, new_y = x + delta_x, y + delta_y
 
             # If position is outside the window
-            if not (0 < new_x < SCREEN_WIDTH and 0 < new_y < SCREEN_HEIGHT):
+            if not self.is_inside_restaurant(alt_pos=(new_x, new_y)):
                 new_x, new_y = self.position
 
             self.animate(

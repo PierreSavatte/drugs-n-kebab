@@ -7,16 +7,22 @@ from dnk.display.load_restaurant import load_restaurant_file, RestaurantLayers
 from dnk.models.character import Character, Ethnicities, Genders
 from dnk.settings import SPRITE_SCALING
 
+from dnk.settings import SPRITE_WIDTH, SPRITE_HEIGHT
+
 
 class RestaurantScene(BaseScene):
     def __init__(self, restaurant, *args, **kwargs):
         self.restaurant = restaurant
+
+        x, y = self.restaurant.size
+        self.walkable_zone = ((0, 0), (x * SPRITE_WIDTH, y * SPRITE_HEIGHT))
+
         super().__init__(*args, **kwargs)
 
     def setup(self):
         # Restaurant layers (floor, walls, furniture, ...)
         restaurant = load_restaurant_file(
-            f"{self.restaurant.size.value}_restaurant"
+            f"{self.restaurant.size_type.value}_restaurant"
         )
         self.collidable_layers = arcade.SpriteList()
         for layer_setting in RestaurantLayers.ordered():
@@ -33,7 +39,7 @@ class RestaurantScene(BaseScene):
         # Actors
         self.actors = arcade.SpriteList()
         self.player = CharacterSprite(
-            Character(Genders.get_random(), Ethnicities.get_random())
+            Character(Genders.get_random(), Ethnicities.get_random()), self
         )
         self.actors.append(self.player)
 
