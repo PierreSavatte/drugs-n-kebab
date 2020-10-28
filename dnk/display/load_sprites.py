@@ -52,7 +52,7 @@ def get_character_sprites(sprite_path):
         sprites[facing] = arcade.load_texture(sprite_path, x=x, **params)
         if facing_mirror:
             sprites[facing_mirror] = arcade.load_texture(
-                sprite_path, x=x, mirrored=True, **params
+                sprite_path, x=x, flipped_horizontally=True, **params
             )
 
     return sprites
