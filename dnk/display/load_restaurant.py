@@ -7,6 +7,8 @@ root_path = os.path.dirname(os.path.abspath(__file__))
 resources_path = os.path.join(root_path, "..", "resources")
 tiled_path = os.path.join(resources_path, "tiled")
 
+# We are assuming the carpets are at the bottom of the restaurants
+
 
 class RestaurantLayers(Enum):
     FLOOR_AND_WALLS = {

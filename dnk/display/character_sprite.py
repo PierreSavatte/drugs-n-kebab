@@ -15,6 +15,8 @@ from dnk.settings import (
     SPRITE_HEIGHT,
     SPRITE_WIDTH,
     SPRITE_SCALING,
+    ORIGINAL_CHARACTER_SPRITE_HEIGHT,
+    ORIGINAL_SPRITE_WIDTH,
     MOVEMENT_ANIMATION_DURATION,
 )
 
@@ -29,6 +31,23 @@ class Direction(enum.Enum):
 class CharacterSprite(arcade.Sprite):
     def __init__(self, model_character, restaurant_scene):
         super().__init__()
+
+        # Compute relative points (to the sprite center, not scaled) from absolute
+        center_x, center_y = (
+            ORIGINAL_SPRITE_WIDTH // 2,
+            ORIGINAL_CHARACTER_SPRITE_HEIGHT // 2,
+        )
+        self.set_hit_box(
+            points=[
+                (absolute_x - center_x, absolute_y - center_y)
+                for absolute_x, absolute_y in [
+                    (0, 0),
+                    (0, ORIGINAL_SPRITE_WIDTH),
+                    (ORIGINAL_SPRITE_WIDTH, 0),
+                    (ORIGINAL_SPRITE_WIDTH, ORIGINAL_SPRITE_WIDTH),
+                ]
+            ]
+        )
         self.restaurant_scene = restaurant_scene
 
         self.sprite_path = os.path.join(
@@ -44,7 +63,10 @@ class CharacterSprite(arcade.Sprite):
         self.update_facing(Facing.UP)
 
         self.scale = SPRITE_SCALING
-        self.position = random.choice(restaurant_scene.carpets_positions)
+
+        carpet = random.choice(restaurant_scene.carpets)
+        self.bottom = 0
+        self.center_x = carpet.center_x
 
     def _update_walking(self, new_facing, moving_mode=None):
         self.update_facing(new_facing)
@@ -85,21 +107,32 @@ class CharacterSprite(arcade.Sprite):
 
         return min_x <= x < max_x and min_y <= y < max_y
 
+    def will_collide_with_list(self, new_pos):
+        import copy
+
+        old_position = copy.copy(self.position)
+        self.position = new_pos
+        sprites_collide = self.collides_with_list(
+            self.restaurant_scene.collidable_layers
+        )
+        self.position = old_position
+        return sprites_collide
+
     def move(self, direction):
         if not self.moving_mode:
             delta_x, delta_y = direction["movement"]
             new_facing = direction["facing"]
 
             x, y = self.position
-            new_x, new_y = x + delta_x, y + delta_y
+            new_pos = x + delta_x, y + delta_y
 
             # If position is outside the window
-            if not self.is_inside_restaurant(alt_pos=(new_x, new_y)):
-                new_x, new_y = self.position
+            if not self.is_inside_restaurant(
+                alt_pos=new_pos
+            ) or self.will_collide_with_list(new_pos):
+                new_pos = self.position
 
-            self.animate(
-                self._get_walking_animation(new_facing, (new_x, new_y))
-            )
+            self.animate(self._get_walking_animation(new_facing, new_pos))
 
     def update_facing(self, new_facing):
         self.facing = new_facing

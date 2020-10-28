@@ -152,4 +152,6 @@ def test_character_sprite_spawns_at_a_carpet_position(
 ):
     sprite = CharacterSprite(character, restaurant_scene)
 
-    assert sprite.position in restaurant_scene.carpets_positions
+    assert sprite.center_x in [
+        carpet.center_x for carpet in restaurant_scene.carpets
+    ]

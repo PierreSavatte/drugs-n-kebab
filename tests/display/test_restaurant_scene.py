@@ -34,18 +34,12 @@ def test_restaurant_scene_has_size_defined_based_on_restaurant_size(
     )
 
 
-def test_restaurant_scene_has_carpet_position_property(restaurant):
-    restaurant_scene = RestaurantScene(restaurant)
-
-    assert restaurant_scene.carpets_positions == [
-        carpet_sprite.position for carpet_sprite in restaurant_scene.carpets
-    ]
-
-
+@patch("dnk.display.restaurant_scene.CharacterSprite")
+@patch("arcade.PhysicsEngineSimple")
 @patch("arcade.tilemap.process_layer")
 @patch("dnk.display.restaurant_scene.load_restaurant_file")
 def test_restaurant_scene_loads_good_layers_depending_on_the_size(
-    load_restaurant_file_mocked, _, restaurant
+    load_restaurant_file_mocked, _, __, ___, restaurant
 ):
     size_name = restaurant.size_type.value
 
