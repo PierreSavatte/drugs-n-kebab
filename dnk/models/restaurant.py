@@ -3,7 +3,7 @@ import time
 
 from dnk.models import RandomlyInitialisable
 from dnk.models.order import Order
-from dnk.settings import ORDER_FREQUENCY
+from dnk.settings import ORDER_FREQUENCY, FIRST_ORDER_DELAY
 
 
 class RestaurantSizeType(Enum):
@@ -27,7 +27,7 @@ class Restaurant(RandomlyInitialisable):
         self.size = SIZE_SIZE_TYPE_MAPPING[size_type]
 
         self.last_ts_received_order = (
-            time.time() + 3 * ORDER_FREQUENCY
+            time.time() + FIRST_ORDER_DELAY
         )  # Let the player breath at the beginning
         self.orders = []
 
