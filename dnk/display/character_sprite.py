@@ -12,11 +12,13 @@ from dnk.display.load_sprites import (
     Facing,
 )
 from dnk.settings import (
+    DEBUG_MODE,
     SPRITE_HEIGHT,
     SPRITE_WIDTH,
     SPRITE_SCALING,
     ORIGINAL_CHARACTER_SPRITE_HEIGHT,
     ORIGINAL_SPRITE_WIDTH,
+    ORIGINAL_SPRITE_HEIGHT,
     MOVEMENT_ANIMATION_DURATION,
 )
 
@@ -36,27 +38,89 @@ KEY_MAPPING = {
 }
 
 
-class CharacterSprite(arcade.Sprite):
-    def __init__(self, model_character, restaurant_scene):
+class ActionSprite(arcade.Sprite):
+
+    DELTA = {
+        # UP
+        Facing.UP: (0, SPRITE_HEIGHT),
+        Facing.W_UP: (0, SPRITE_HEIGHT),
+        Facing.W_UP_BIS: (0, SPRITE_HEIGHT),
+        # DOWN
+        Facing.DOWN: (0, -SPRITE_HEIGHT),
+        Facing.W_DOWN: (0, -SPRITE_HEIGHT),
+        Facing.W_DOWN_BIS: (0, -SPRITE_HEIGHT),
+        # RIGHT
+        Facing.RIGHT: (SPRITE_HEIGHT, 0),
+        Facing.W_RIGHT: (SPRITE_HEIGHT, 0),
+        Facing.W_RIGHT_BIS: (SPRITE_HEIGHT, 0),
+        # LEFT
+        Facing.LEFT: (-SPRITE_HEIGHT, 0),
+        Facing.W_LEFT: (-SPRITE_HEIGHT, 0),
+        Facing.W_LEFT_BIS: (-SPRITE_HEIGHT, 0),
+    }
+
+    def __init__(self, character_sprite):
+        super().__init__(
+            os.path.join(
+                sprites_path,
+                "restaurant",
+                "action_sprite.png",
+            )
+        )
+        # Since the character is facing up:
+        self.scale = SPRITE_SCALING
+        self.keep_pace(character_sprite)
+
+        # Set the hit box
+        half_original_sprite_width = ORIGINAL_SPRITE_WIDTH // 2
+        half_original_sprite_height = ORIGINAL_SPRITE_HEIGHT // 2
+        self.set_hit_box(
+            points=[
+                (
+                    absolute_x - half_original_sprite_width,
+                    absolute_y - half_original_sprite_height,
+                )
+                for absolute_x, absolute_y in [
+                    (0, 0),
+                    (0, half_original_sprite_height),
+                    (half_original_sprite_width, 0),
+                    (half_original_sprite_width, half_original_sprite_height),
+                ]
+            ]
+        )
+        character_sprite.after_change("position", self.keep_pace)
+        character_sprite.after_change("facing", self.keep_pace)
+
+    def keep_pace(self, character_sprite, attribute=None, old=None, new=None):
+        delta_x, delta_y = ActionSprite.DELTA[character_sprite.facing]
+        self.bottom = character_sprite.bottom + delta_y
+        self.center_x = character_sprite.center_x + delta_x
+
+
+class CharacterSprite(arcade_curtains.ObservableSprite):
+    def __init__(self, model_character, restaurant_widget):
         super().__init__()
 
         # Compute relative points (to the sprite center, not scaled) from absolute
-        center_x, center_y = (
+        relative_center_x, relative_center_y = (
             ORIGINAL_SPRITE_WIDTH // 2,
             ORIGINAL_CHARACTER_SPRITE_HEIGHT // 2,
         )
         self.set_hit_box(
             points=[
-                (absolute_x - center_x, absolute_y - center_y)
+                (
+                    absolute_x - relative_center_x,
+                    absolute_y - relative_center_y,
+                )
                 for absolute_x, absolute_y in [
                     (0, 0),
                     (0, ORIGINAL_SPRITE_WIDTH),
                     (ORIGINAL_SPRITE_WIDTH, 0),
-                    (ORIGINAL_SPRITE_WIDTH, ORIGINAL_SPRITE_WIDTH),
+                    (ORIGINAL_SPRITE_WIDTH, ORIGINAL_SPRITE_HEIGHT),
                 ]
             ]
         )
-        self.restaurant_scene = restaurant_scene
+        self.restaurant_widget = restaurant_widget
 
         self.sprite_path = os.path.join(
             sprites_path,
@@ -73,9 +137,26 @@ class CharacterSprite(arcade.Sprite):
 
         self.scale = SPRITE_SCALING
 
-        carpet = random.choice(restaurant_scene.carpets)
-        self.bottom = restaurant_scene.bottom
+        carpet = random.choice(restaurant_widget.carpets)
+        self.bottom = restaurant_widget.bottom
         self.center_x = carpet.center_x
+
+        self.action_sprite = ActionSprite(self)
+        if DEBUG_MODE:
+            restaurant_widget.scene.events.before_draw(
+                self.add_action_sprite_to_sprite_list,
+                {"scene": restaurant_widget.scene},
+            )
+            restaurant_widget.scene.events.after_draw(
+                self.remove_action_sprite_to_sprite_list,
+                {"scene": restaurant_widget.scene},
+            )
+
+    def add_action_sprite_to_sprite_list(self, scene):
+        scene.sprites.append(self.action_sprite)
+
+    def remove_action_sprite_to_sprite_list(self, scene):
+        scene.sprites.remove(self.action_sprite)
 
     def _update_walking(self, new_facing, finished_moving=False):
         self.update_facing(new_facing)
@@ -112,7 +193,7 @@ class CharacterSprite(arcade.Sprite):
             alt_pos = self.position
         x, y = alt_pos
 
-        (min_x, min_y), (max_x, max_y) = self.restaurant_scene.walkable_zone
+        (min_x, min_y), (max_x, max_y) = self.restaurant_widget.walkable_zone
 
         return min_x < x < max_x and min_y < y < max_y
 
@@ -122,7 +203,7 @@ class CharacterSprite(arcade.Sprite):
         old_position = copy.copy(self.position)
         self.position = new_pos
         sprites_collide = self.collides_with_list(
-            self.restaurant_scene.collidable_layers
+            self.restaurant_widget.collidable_layers
         )
         self.position = old_position
         return sprites_collide

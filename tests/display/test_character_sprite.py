@@ -3,7 +3,7 @@ import os
 from unittest.mock import patch
 import pytest
 
-from dnk.settings import SPRITE_HEIGHT
+from dnk.settings import SPRITE_HEIGHT, SPRITE_WIDTH
 from dnk.display.character_sprite import (
     CharacterSprite,
     Direction,
@@ -30,7 +30,7 @@ def restaurant_scene():
 def test_character_sprite_has_sprite_related_to_their_ethnicity(
     character, restaurant_scene
 ):
-    sprite = CharacterSprite(character, restaurant_scene)
+    sprite = CharacterSprite(character, restaurant_scene.widget)
 
     expected_path = os.path.join(
         "restaurant",
@@ -42,7 +42,7 @@ def test_character_sprite_has_sprite_related_to_their_ethnicity(
 
 
 def test_character_sprite_has_walking_animation(character, restaurant_scene):
-    sprite = CharacterSprite(character, restaurant_scene)
+    sprite = CharacterSprite(character, restaurant_scene.widget)
 
     x, y = sprite.position
     walking_animation = sprite._get_walking_animation(
@@ -62,7 +62,7 @@ def test_character_sprite_has_walking_animation(character, restaurant_scene):
 
 
 def test_character_sprite_animation_moves_sprite(character, restaurant_scene):
-    sprite = CharacterSprite(character, restaurant_scene)
+    sprite = CharacterSprite(character, restaurant_scene.widget)
     x, y = sprite.position
     new_position = (x + 10, y + 10)
 
@@ -79,7 +79,7 @@ def test_character_sprite_animation_moves_sprite(character, restaurant_scene):
 def test_character_sprite_can_change_direction_if_one_already_started(
     character, restaurant_scene
 ):
-    sprite = CharacterSprite(character, restaurant_scene)
+    sprite = CharacterSprite(character, restaurant_scene.widget)
     x, y = sprite.position
     sprite.already_moving = True
     sprite.direction = Direction.DOWN.value
@@ -89,12 +89,12 @@ def test_character_sprite_can_change_direction_if_one_already_started(
     assert sprite.direction == Direction.UP.value
 
 
-def test_character_sprite_must_be_init_with_restaurant(
+def test_character_sprite_must_be_init_with_restaurant_widget(
     character, restaurant_scene
 ):
-    sprite = CharacterSprite(character, restaurant_scene)
+    sprite = CharacterSprite(character, restaurant_scene.widget)
 
-    assert sprite.restaurant_scene is restaurant_scene
+    assert sprite.restaurant_widget is restaurant_scene.widget
 
 
 def test_character_sprite_can_say_if_its_insite_the_restaurant(
@@ -102,7 +102,7 @@ def test_character_sprite_can_say_if_its_insite_the_restaurant(
 ):
     _, (max_x, max_y) = restaurant_scene.walkable_zone
 
-    sprite = CharacterSprite(character, restaurant_scene)
+    sprite = CharacterSprite(character, restaurant_scene.widget)
 
     assert sprite.is_inside_restaurant()
 
@@ -132,7 +132,7 @@ def test_character_sprite_cannot_walk_outside_the_restaurant(
 ):
     postion_start = getattr(restaurant_scene, postion_start_name)
 
-    sprite = CharacterSprite(character, restaurant_scene)
+    sprite = CharacterSprite(character, restaurant_scene.widget)
 
     sprite.position = postion_start
 
@@ -146,7 +146,7 @@ def test_character_sprite_cannot_walk_outside_the_restaurant(
 def test_character_sprite_spawns_at_a_carpet_position(
     character, restaurant_scene
 ):
-    sprite = CharacterSprite(character, restaurant_scene)
+    sprite = CharacterSprite(character, restaurant_scene.widget)
 
     assert sprite.center_x in [
         carpet.center_x for carpet in restaurant_scene.carpets
@@ -158,7 +158,7 @@ def test_character_sprite_spawns_at_a_carpet_position(
 def test_character_sprite_can_start_moving(
     _, get_walking_animation_mocked, character, restaurant_scene
 ):
-    sprite = CharacterSprite(character, restaurant_scene)
+    sprite = CharacterSprite(character, restaurant_scene.widget)
 
     start_x, start_y = sprite.position
 
@@ -177,7 +177,7 @@ def test_character_sprite_can_start_moving(
 def test_character_sprite_can_stop_moving(
     _, get_walking_animation_mocked, character, restaurant_scene
 ):
-    sprite = CharacterSprite(character, restaurant_scene)
+    sprite = CharacterSprite(character, restaurant_scene.widget)
 
     start_x, start_y = sprite.position
     # Tell sprite to go in a direction
@@ -190,3 +190,44 @@ def test_character_sprite_can_stop_moving(
     sprite.update()
 
     get_walking_animation_mocked.assert_not_called()
+
+
+def test_character_sprite_has_a_sprite_representing_where_the_interaction_is(
+    character, restaurant_scene
+):
+    sprite = CharacterSprite(character, restaurant_scene.widget)
+
+    assert sprite.action_sprite.bottom == sprite.bottom + SPRITE_HEIGHT
+
+
+def test_action_sprite_follows_the_character_sprite(
+    character, restaurant_scene
+):
+    sprite = CharacterSprite(character, restaurant_scene.widget)
+
+    current_action_sprite_pos = sprite.action_sprite.position
+    sprite.position = (sprite.position[0] + 5, sprite.position[1])
+
+    expected_position = (
+        current_action_sprite_pos[0] + 5,
+        current_action_sprite_pos[1],
+    )
+    assert sprite.action_sprite.position == expected_position
+
+
+def test_action_sprite_follows_facing_of_the_character_sprite(
+    character, restaurant_scene
+):
+    sprite = CharacterSprite(character, restaurant_scene.widget)
+
+    sprite.facing = Facing.DOWN
+
+    assert sprite.action_sprite.bottom == sprite.bottom - SPRITE_HEIGHT
+
+    sprite.facing = Facing.LEFT
+
+    assert sprite.action_sprite.center_x == sprite.center_x - SPRITE_WIDTH
+
+    sprite.facing = Facing.RIGHT
+
+    assert sprite.action_sprite.center_x == sprite.center_x + SPRITE_WIDTH
