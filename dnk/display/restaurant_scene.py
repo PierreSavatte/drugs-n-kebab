@@ -56,14 +56,10 @@ class RestaurantWidget(Widget):
             self.sprites.append(notification)
             needs_refreshing = True
 
-        i = 0
-        while i < len(self.sprites):
-            sprite = self.sprites[i]
-            if isinstance(sprite, Notification):
-                if sprite.is_ready_to_be_deleted:
-                    self.sprites.remove(sprite)
-                    needs_refreshing = True
-            i += 1
+        for sprite in self.notifications_sprites:
+            if sprite.is_ready_to_be_deleted:
+                self.sprites.remove(sprite)
+                needs_refreshing = True
 
         if needs_refreshing:
             self.register(self.scene.sprites)
