@@ -13,7 +13,6 @@ from dnk.settings import (
 
 class Notification(arcade_curtains.Sprite):
     def __init__(self, target):
-        print(notification_sprite_path)
         super().__init__(notification_sprite_path)
         self.scale = SPRITE_SCALING
         self.top = target.top
