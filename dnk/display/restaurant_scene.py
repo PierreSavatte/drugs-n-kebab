@@ -18,19 +18,13 @@ class RestaurantScene(BaseScene):
         self.widget = RestaurantWidget(
             SCREEN_WIDTH // 2,
             SCREEN_HEIGHT // 2,
+            scene=self,
             restaurant=restaurant,
             events=self.events,
         )
         self.widget.register(self.sprites)
 
         self.events.key_down(arcade.key.ESCAPE, exit_game)
-        self.events.frame(self.update)
-
-    def update(self, *args, **kwargs):
-        # refresh_sprites
-        if self.widget.needs_refreshing:
-            self.widget.needs_refreshing = False
-            self.widget.register(self.sprites)
 
     def enter_scene(self, previous_scene):
         arcade.set_background_color(arcade.color.WHITE)
@@ -47,10 +41,11 @@ class RestaurantScene(BaseScene):
 
 class RestaurantWidget(Widget):
     def __init__(self, *args, **kwargs):
+        self.scene = kwargs.pop("scene")
         super().__init__(*args, **kwargs)
-        self.needs_refreshing = False
 
     def update(self, *args, **kwargs):
+        needs_refreshing = False
         self.player.update()
         nb_orders = len(self.restaurant.orders)
         self.restaurant.update()
@@ -59,7 +54,7 @@ class RestaurantWidget(Widget):
             cash_register = random.choice(self.cash_registers)
             notification = Notification(cash_register)
             self.sprites.append(notification)
-            self.needs_refreshing = True
+            needs_refreshing = True
 
         i = 0
         while i < len(self.sprites):
@@ -67,8 +62,11 @@ class RestaurantWidget(Widget):
             if isinstance(sprite, Notification):
                 if sprite.is_ready_to_be_deleted:
                     self.sprites.remove(sprite)
-                    self.needs_refreshing = True
+                    needs_refreshing = True
             i += 1
+
+        if needs_refreshing:
+            self.register(self.scene.sprites)
 
     @property
     def notifications_sprites(self):

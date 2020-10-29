@@ -187,23 +187,6 @@ def test_restaurant_widget_triggers_a_notification_when_order_received(
 
 
 @patch("arcade.get_window")
-def test_restaurant_scene_refreshes_its_sprite_list_when_widget_needs_update(
-    _,
-    restaurant,
-):
-    restaurant_scene = RestaurantScene(restaurant)
-
-    new_sprite = arcade.Sprite()
-    restaurant_scene.widget.sprites.append(new_sprite)
-    restaurant_scene.widget.needs_refreshing = True
-
-    # Called each frame
-    restaurant_scene.update()
-
-    assert new_sprite in restaurant_scene.sprites
-
-
-@patch("arcade.get_window")
 @freezegun.freeze_time("2020-10-28 18:24")
 def test_restaurant_widget_deletes_notification_when_notification_is_finished(
     _,
@@ -222,10 +205,5 @@ def test_restaurant_widget_deletes_notification_when_notification_is_finished(
 
     restaurant_scene.widget.update()
 
-    assert restaurant_scene.widget.needs_refreshing is True
     assert notification not in restaurant_scene.widget.sprites
-
-    # Called each frame
-    restaurant_scene.update()
-
     assert notification not in restaurant_scene.sprites
