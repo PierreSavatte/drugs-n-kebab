@@ -29,7 +29,9 @@ def test_display_sub_window_when_user_hits_e(restaurant_scene):
     assert (
         restaurant_scene.start_interactive_window,
         {},
-    ) in restaurant_scene.events.handlers[(Event.KEY_DOWN, arcade.key.E)]
+    ) in restaurant_scene.events.event_group.handlers[
+        (Event.KEY_DOWN, arcade.key.E)
+    ]
 
 
 @patch("dnk.display.restaurant_scene.OrderList")
@@ -80,9 +82,13 @@ def test_setting_order_list_will_delete_the_events_for_user_to_move(
         assert (
             widget.player.start_moving,
             {"direction": direction},
-        ) not in restaurant_scene.events.handlers[(Event.KEY_DOWN, key)]
+        ) not in restaurant_scene.events.event_group.handlers[
+            (Event.KEY_DOWN, key)
+        ]
 
         assert (
             widget.player.stop_moving,
             {"direction": direction},
-        ) not in restaurant_scene.events.handlers[(Event.KEY_UP, key)]
+        ) not in restaurant_scene.events.event_group.handlers[
+            (Event.KEY_UP, key)
+        ]

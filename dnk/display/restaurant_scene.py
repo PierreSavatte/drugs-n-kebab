@@ -1,8 +1,8 @@
 import random
-from enum import Enum
 
 import arcade
 from arcade_curtains import BaseScene, Widget
+from arcade_curtains.event import EventGroup
 
 from dnk.display import exit_game
 from dnk.display.order_list import OrderList
@@ -32,7 +32,7 @@ class RestaurantScene(BaseScene):
     def start_interactive_window(self):
         for interactive_sprite in self.widget.player.can_interact_with():
             if interactive_sprite in self.widget.cash_registers:
-                self.widget.remove_keyboard_events()
+                self.widget.player_movement_events.disable()
                 self.in_sub_window = True
                 self.interactive_window = OrderList(
                     scene=self,
@@ -40,7 +40,7 @@ class RestaurantScene(BaseScene):
                 )
 
     def end_interactive_window(self):
-        self.widget.add_keyboard_events()
+        self.widget.player_movement_events.enable()
         self.in_sub_window = False
         self.interactive_window = None
 
@@ -113,33 +113,21 @@ class RestaurantWidget(Widget):
 
         # Events
         self.scene.events.frame(self.update)
-        self.add_keyboard_events()
 
-    def add_keyboard_events(self):
-        # Event to allow player to walk
+        self.player_movement_events = EventGroup()
         for key, direction in [
             (arcade.key.W, Direction.UP),
             (arcade.key.S, Direction.DOWN),
             (arcade.key.D, Direction.RIGHT),
             (arcade.key.A, Direction.LEFT),
         ]:
-            self.scene.events.key_down(
+            self.player_movement_events.key_down(
                 key, self.player.start_moving, {"direction": direction.value}
             )
-            self.scene.events.key_up(
+            self.player_movement_events.key_up(
                 key, self.player.stop_moving, {"direction": direction.value}
             )
-
-    def remove_keyboard_events(self):
-        # Event to allow player to walk
-        for key, direction in [
-            (arcade.key.W, Direction.UP),
-            (arcade.key.S, Direction.DOWN),
-            (arcade.key.D, Direction.RIGHT),
-            (arcade.key.A, Direction.LEFT),
-        ]:
-            self.scene.events.remove_key_down(key, self.player.start_moving)
-            self.scene.events.remove_key_up(key, self.player.stop_moving)
+        self.scene.events.register_group(self.player_movement_events)
 
     @property
     def walkable_zone(self):

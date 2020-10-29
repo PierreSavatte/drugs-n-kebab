@@ -30,8 +30,8 @@ def test_order_list_display_order_list(restaurant_scene):
     )
 
 
-def test_player_can_select_order_in_list_using_wasd_keys():
-    assert False
+# def test_player_can_select_order_in_list_using_wasd_keys():
+#     assert False
 
 
 # def test_employee_can_take_an_order(
