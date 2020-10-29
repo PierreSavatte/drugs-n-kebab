@@ -18,6 +18,7 @@ def in_order_list(restaurant_scene):
 
 def test_order_list_needs_scene_and_callback(restaurant_scene):
     OrderList(
+        restaurant_scene.interactive_window_sprites,
         scene=restaurant_scene,
         callback_once_finished=restaurant_scene.end_interactive_window,
     )
@@ -25,6 +26,7 @@ def test_order_list_needs_scene_and_callback(restaurant_scene):
 
 def test_order_list_display_order_list(restaurant_scene):
     OrderList(
+        restaurant_scene.interactive_window_sprites,
         scene=restaurant_scene,
         callback_once_finished=restaurant_scene.end_interactive_window,
     )

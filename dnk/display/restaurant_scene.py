@@ -5,10 +5,10 @@ from arcade_curtains import BaseScene, Widget
 from arcade_curtains.event import EventGroup
 
 from dnk.display import exit_game
-from dnk.display.order_list import OrderList
 from dnk.display.character_sprite import CharacterSprite, Direction
 from dnk.display.load_restaurant import load_restaurant_file, RestaurantLayers
 from dnk.display.notification import Notification
+from dnk.display.order_list import OrderList
 from dnk.models.character import Character
 from dnk.settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from dnk.settings import SPRITE_SCALING
@@ -18,11 +18,15 @@ class RestaurantScene(BaseScene):
     def setup(self, restaurant=None):
         self.restaurant = restaurant
 
-        self.sprites = arcade.SpriteList()
-        self.widget = RestaurantWidget(
-            SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, scene=self
+        self.restaurant_sprites = arcade.SpriteList()
+        self.restaurant_window = RestaurantWidget(
+            self.restaurant_sprites,
+            SCREEN_WIDTH // 2,
+            SCREEN_HEIGHT // 2,
+            scene=self,
         )
-        self.widget.register(self.sprites)
+
+        self.interactive_window_sprites = arcade.SpriteList()
         self.in_sub_window = False
         self.interactive_window = None
 
@@ -30,17 +34,20 @@ class RestaurantScene(BaseScene):
         self.events.key_down(arcade.key.E, self.start_interactive_window)
 
     def start_interactive_window(self):
-        for interactive_sprite in self.widget.player.can_interact_with():
-            if interactive_sprite in self.widget.cash_registers:
-                self.widget.player_movement_events.disable()
+        for (
+            interactive_sprite
+        ) in self.restaurant_window.player.can_interact_with():
+            if interactive_sprite in self.restaurant_window.cash_registers:
+                self.restaurant_window.player_movement_events.disable()
                 self.in_sub_window = True
                 self.interactive_window = OrderList(
+                    self.interactive_window_sprites,
                     scene=self,
                     callback_once_finished=self.end_interactive_window,
                 )
 
     def end_interactive_window(self):
-        self.widget.player_movement_events.enable()
+        self.restaurant_window.player_movement_events.enable()
         self.in_sub_window = False
         self.interactive_window = None
 
@@ -50,8 +57,6 @@ class RestaurantScene(BaseScene):
 
 class RestaurantWidget(Widget):
     def update(self, *args, **kwargs):
-        needs_refreshing = False
-
         if not self.scene.in_sub_window:
             # Let the player continue walking
             self.player.update()
@@ -65,16 +70,11 @@ class RestaurantWidget(Widget):
             cash_register = random.choice(self.cash_registers)
             notification = Notification(cash_register)
             self.sprites.append(notification)
-            needs_refreshing = True
 
         # Remove notifications
         for sprite in self.notifications_sprites:
             if sprite.is_ready_to_be_deleted:
                 self.sprites.remove(sprite)
-                needs_refreshing = True
-
-        if needs_refreshing:
-            self.register(self.scene.sprites)
 
     @property
     def notifications_sprites(self):

@@ -21,5 +21,5 @@ def restaurant_scene(restaurant):
 
 
 @pytest.fixture
-def restaurant_widget(restaurant_scene):
-    return restaurant_scene.widget
+def restaurant_window(restaurant_scene):
+    return restaurant_scene.restaurant_window

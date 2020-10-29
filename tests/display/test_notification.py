@@ -13,7 +13,7 @@ from dnk.settings import (
 
 @pytest.fixture
 def target(restaurant_scene):
-    return restaurant_scene.sprites[0]
+    return restaurant_scene.restaurant_sprites[0]
 
 
 @pytest.fixture

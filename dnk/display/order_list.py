@@ -6,7 +6,6 @@ class OrderList(arcade_curtains.Widget):
     def setup_widget(self, scene, callback_once_finished):
         self.scene = scene
         self.callback_once_finished = callback_once_finished
-        self.sprites = arcade.SpriteList()
 
         # for key in [arcade.key.W, arcade.key.S, arcade.key.D, arcade.key.A]:
         #     self.scene.events.key_down(

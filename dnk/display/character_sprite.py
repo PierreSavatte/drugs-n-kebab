@@ -99,7 +99,7 @@ class ActionSprite(arcade.Sprite):
 
 
 class CharacterSprite(arcade_curtains.ObservableSprite):
-    def __init__(self, model_character, restaurant_widget):
+    def __init__(self, model_character, restaurant_window):
         super().__init__()
 
         # Compute relative points (to the sprite center, not scaled) from absolute
@@ -121,7 +121,7 @@ class CharacterSprite(arcade_curtains.ObservableSprite):
                 ]
             ]
         )
-        self.restaurant_widget = restaurant_widget
+        self.restaurant_window = restaurant_window
 
         self.sprite_path = os.path.join(
             sprites_path,
@@ -138,19 +138,19 @@ class CharacterSprite(arcade_curtains.ObservableSprite):
 
         self.scale = SPRITE_SCALING
 
-        carpet = random.choice(restaurant_widget.carpets)
-        self.bottom = restaurant_widget.bottom
+        carpet = random.choice(restaurant_window.carpets)
+        self.bottom = restaurant_window.bottom
         self.center_x = carpet.center_x
 
         self.action_sprite = ActionSprite(self)
         if DEBUG_MODE:
-            restaurant_widget.scene.events.before_draw(
+            restaurant_window.scene.events.before_draw(
                 self.add_action_sprite_to_sprite_list,
-                {"scene": restaurant_widget.scene},
+                {"scene": restaurant_window.scene},
             )
-            restaurant_widget.scene.events.after_draw(
+            restaurant_window.scene.events.after_draw(
                 self.remove_action_sprite_to_sprite_list,
-                {"scene": restaurant_widget.scene},
+                {"scene": restaurant_window.scene},
             )
 
     def add_action_sprite_to_sprite_list(self, scene):
@@ -194,7 +194,7 @@ class CharacterSprite(arcade_curtains.ObservableSprite):
             alt_pos = self.position
         x, y = alt_pos
 
-        (min_x, min_y), (max_x, max_y) = self.restaurant_widget.walkable_zone
+        (min_x, min_y), (max_x, max_y) = self.restaurant_window.walkable_zone
 
         return min_x < x < max_x and min_y < y < max_y
 
@@ -204,7 +204,7 @@ class CharacterSprite(arcade_curtains.ObservableSprite):
         old_position = copy.copy(self.position)
         self.position = new_pos
         sprites_collide = self.collides_with_list(
-            self.restaurant_widget.collidable_layers
+            self.restaurant_window.collidable_layers
         )
         self.position = old_position
         return sprites_collide
@@ -246,7 +246,7 @@ class CharacterSprite(arcade_curtains.ObservableSprite):
             if layer.value["interactive"]:
                 interactive_objects.extend(
                     self.action_sprite.collides_with_list(
-                        getattr(self.restaurant_widget, sprite_list_name)
+                        getattr(self.restaurant_window, sprite_list_name)
                     )
                 )
         return interactive_objects
