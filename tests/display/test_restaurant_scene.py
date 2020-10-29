@@ -1,19 +1,25 @@
-import pytest
-import arcade
-from arcade_curtains import event
-
+import time
 from unittest.mock import patch
 
+import arcade
+import freezegun
+import pytest
+from arcade_curtains import event
+
+from dnk.display.character_sprite import CharacterSprite, Direction
+from dnk.display.load_restaurant import RestaurantLayers
+from dnk.display.notification import Notification
+from dnk.display.restaurant_scene import RestaurantScene
+from dnk.models.restaurant import Restaurant
 from dnk.settings import (
     SPRITE_HEIGHT,
     SPRITE_WIDTH,
     SCREEN_HEIGHT,
     SCREEN_WIDTH,
+    ORDER_FREQUENCY,
+    NOTIFICATION_ANIMATION_DURATION,
+    NOTIFICATION_WAITING_DURATION,
 )
-from dnk.models.restaurant import Restaurant
-from dnk.display.restaurant_scene import RestaurantScene
-from dnk.display.character_sprite import CharacterSprite, Direction
-from dnk.display.load_restaurant import RestaurantLayers
 
 
 @pytest.fixture
@@ -108,17 +114,19 @@ def test_player_can_stop_moving_in_restaurant(restaurant):
     ) in restaurant_scene.events.handlers[(event.Event.KEY_UP, arcade.key.D)]
 
 
+@patch("arcade.get_window")
 @patch("dnk.display.character_sprite.CharacterSprite.update")
 def test_character_sprite_keeps_walking_every_frame(
-    character_sprite_update_method, restaurant
+    character_sprite_update_method, _, restaurant
 ):
     restaurant_scene = RestaurantScene(restaurant)
+    widget = restaurant_scene.widget
     assert (
-        restaurant_scene.update_at_each_frame,
+        widget.update,
         {},
     ) in restaurant_scene.events.handlers[event.Event.FRAME]
 
-    restaurant_scene.update_at_each_frame()
+    widget.update()
 
     character_sprite_update_method.assert_called_once()
 
@@ -145,15 +153,79 @@ def test_restaurant_scene_define_good_layers_as_collidable(restaurant):
 
 
 @patch("dnk.models.restaurant.Restaurant.update")
-def test_restaurant_scene_update_at_frame_calls_restaurant_update(
+def test_restaurant_widget_update_calls_restaurant_update(
     restaurant_update_method, restaurant
 ):
     restaurant_scene = RestaurantScene(restaurant)
+    widget = restaurant_scene.widget
     assert (
-        restaurant_scene.update_at_each_frame,
+        widget.update,
         {},
     ) in restaurant_scene.events.handlers[event.Event.FRAME]
 
-    restaurant_scene.update_at_each_frame()
+    widget.update()
 
     restaurant_update_method.assert_called_once()
+
+
+@patch("arcade.get_window")
+@freezegun.freeze_time("2020-10-28 18:24")
+def test_restaurant_widget_triggers_a_notification_when_order_received(
+    _,
+    restaurant,
+):
+    restaurant_scene = RestaurantScene(restaurant)
+    restaurant.last_ts_received_order = time.time() - ORDER_FREQUENCY
+
+    assert not restaurant_scene.notifications_sprites
+
+    restaurant_scene.widget.update()
+
+    assert (len(restaurant_scene.notifications_sprites) == 1) and isinstance(
+        restaurant_scene.notifications_sprites[0], Notification
+    )
+
+
+@patch("arcade.get_window")
+def test_restaurant_scene_refreshes_its_sprite_list_when_widget_needs_update(
+    _,
+    restaurant,
+):
+    restaurant_scene = RestaurantScene(restaurant)
+
+    new_sprite = arcade.Sprite()
+    restaurant_scene.widget.sprites.append(new_sprite)
+    restaurant_scene.widget.needs_refreshing = True
+
+    # Called each frame
+    restaurant_scene.update()
+
+    assert new_sprite in restaurant_scene.sprites
+
+
+@patch("arcade.get_window")
+@freezegun.freeze_time("2020-10-28 18:24")
+def test_restaurant_widget_deletes_notification_when_notification_is_finished(
+    _,
+    restaurant,
+):
+    restaurant_scene = RestaurantScene(restaurant)
+
+    # Notification was created, and is ready to be deleted
+    notification = Notification(target=restaurant_scene.sprites[0])
+    notification.time_triggered = (
+        time.time()
+        - NOTIFICATION_ANIMATION_DURATION
+        - NOTIFICATION_WAITING_DURATION
+    )
+    restaurant_scene.widget.sprites.append(notification)
+
+    restaurant_scene.widget.update()
+
+    assert restaurant_scene.widget.needs_refreshing is True
+    assert notification not in restaurant_scene.widget.sprites
+
+    # Called each frame
+    restaurant_scene.update()
+
+    assert notification not in restaurant_scene.sprites

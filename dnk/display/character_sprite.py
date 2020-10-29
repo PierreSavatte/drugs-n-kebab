@@ -78,13 +78,11 @@ class CharacterSprite(arcade.Sprite):
         self.center_x = carpet.center_x
 
     def _update_walking(self, new_facing, finished_moving=False):
-        print("_update_walking: finished_moving=", finished_moving)
         self.update_facing(new_facing)
         if finished_moving:
             self.already_moving = False
 
     def _get_walking_animation(self, facing, new_pos):
-        print("_get_walking_animation")
         # Get intermediary facing
         walking_facing_1 = Facing["_".join(["W", facing.name])]
         walking_facing_2 = Facing["_".join([walking_facing_1.name, "BIS"])]
@@ -145,8 +143,6 @@ class CharacterSprite(arcade.Sprite):
                 alt_pos=new_pos
             ) or self.will_collide_with_list(new_pos):
                 new_pos = self.position
-            print("self.position=", self.position)
-            print("new_pos=", new_pos)
 
             self.animate(self._get_walking_animation(new_facing, new_pos))
 

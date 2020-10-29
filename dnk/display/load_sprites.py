@@ -13,6 +13,9 @@ resources_path = os.path.join(root_path, "..", "resources")
 sprites_path = os.path.join(resources_path, "sprites")
 
 
+notification_sprite_path = os.path.join(sprites_path, "notification.png")
+
+
 class Facing(enum.Enum):
     UP = "up"
     W_UP = "w_up"

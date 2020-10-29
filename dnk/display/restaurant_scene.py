@@ -1,13 +1,15 @@
+import random
+
 import arcade
 from arcade_curtains import BaseScene, Widget
 
 from dnk.display import exit_game
 from dnk.display.character_sprite import CharacterSprite, Direction
 from dnk.display.load_restaurant import load_restaurant_file, RestaurantLayers
-from dnk.models.character import Character, Ethnicities, Genders
-from dnk.settings import SPRITE_SCALING
-
+from dnk.display.notification import Notification
+from dnk.models.character import Character
 from dnk.settings import SCREEN_WIDTH, SCREEN_HEIGHT
+from dnk.settings import SPRITE_SCALING
 
 
 class RestaurantScene(BaseScene):
@@ -22,6 +24,13 @@ class RestaurantScene(BaseScene):
         self.widget.register(self.sprites)
 
         self.events.key_down(arcade.key.ESCAPE, exit_game)
+        self.events.frame(self.update)
+
+    def update(self, *args, **kwargs):
+        # refresh_sprites
+        if self.widget.needs_refreshing:
+            self.widget.needs_refreshing = False
+            self.widget.register(self.sprites)
 
     def enter_scene(self, previous_scene):
         arcade.set_background_color(arcade.color.WHITE)
@@ -37,9 +46,37 @@ class RestaurantScene(BaseScene):
 
 
 class RestaurantWidget(Widget):
-    def update_at_each_frame(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.needs_refreshing = False
+
+    def update(self, *args, **kwargs):
         self.player.update()
+        nb_orders = len(self.restaurant.orders)
         self.restaurant.update()
+
+        if len(self.restaurant.orders) > nb_orders:
+            cash_register = random.choice(self.cash_registers)
+            notification = Notification(cash_register)
+            self.sprites.append(notification)
+            self.needs_refreshing = True
+
+        i = 0
+        while i < len(self.sprites):
+            sprite = self.sprites[i]
+            if isinstance(sprite, Notification):
+                if sprite.is_ready_to_be_deleted:
+                    self.sprites.remove(sprite)
+                    self.needs_refreshing = True
+            i += 1
+
+    @property
+    def notifications_sprites(self):
+        return [
+            sprite
+            for sprite in self.sprites
+            if isinstance(sprite, Notification)
+        ]
 
     def setup_widget(self, restaurant=None, events=None):
         self.restaurant = restaurant
@@ -82,7 +119,7 @@ class RestaurantWidget(Widget):
                 key, self.player.stop_moving, {"direction": direction.value}
             )
 
-        events.frame(self.update_at_each_frame)
+        events.frame(self.update)
 
     @property
     def walkable_zone(self):
