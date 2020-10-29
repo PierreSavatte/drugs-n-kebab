@@ -46,16 +46,22 @@ class RestaurantWidget(Widget):
 
     def update(self, *args, **kwargs):
         needs_refreshing = False
+
+        # Let the player continue walking
         self.player.update()
+
+        # Updates the restaurant (maybe receive an order)
         nb_orders = len(self.restaurant.orders)
         self.restaurant.update()
 
+        # Add notifications
         if len(self.restaurant.orders) > nb_orders:
             cash_register = random.choice(self.cash_registers)
             notification = Notification(cash_register)
             self.sprites.append(notification)
             needs_refreshing = True
 
+        # Remove notifications
         for sprite in self.notifications_sprites:
             if sprite.is_ready_to_be_deleted:
                 self.sprites.remove(sprite)
