@@ -14,26 +14,32 @@ class RestaurantLayers(Enum):
     FLOOR_AND_WALLS = {
         "name": "floor_and_walls",
         "collidable": False,
+        "interactive": False,
     }
     FURNITURE = {
         "name": "furniture",
         "collidable": True,
+        "interactive": False,
     }
     CASH_REGISTERS = {
         "name": "cash_registers",
         "collidable": True,
+        "interactive": True,
     }
     COOKING_STATIONS = {
         "name": "cooking_stations",
         "collidable": True,
+        "interactive": True,
     }
     CHAIRS = {
         "name": "chairs",
         "collidable": False,
+        "interactive": False,
     }
     CARPETS = {
         "name": "carpets",
         "collidable": False,
+        "interactive": False,
     }
 
     @classmethod

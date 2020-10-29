@@ -6,6 +6,7 @@ from functools import partial
 import arcade
 import arcade_curtains
 
+from dnk.display.load_restaurant import RestaurantLayers
 from dnk.display.load_sprites import (
     sprites_path,
     get_character_sprites,
@@ -237,6 +238,18 @@ class CharacterSprite(arcade_curtains.ObservableSprite):
     def update_facing(self, new_facing):
         self.facing = new_facing
         self.texture = self.facing_sprites[new_facing]
+
+    def can_interact_with(self):
+        interactive_objects = []
+        for layer in RestaurantLayers:
+            sprite_list_name = layer.value["name"]
+            if layer.value["interactive"]:
+                interactive_objects.extend(
+                    self.action_sprite.collides_with_list(
+                        getattr(self.restaurant_widget, sprite_list_name)
+                    )
+                )
+        return interactive_objects
 
     def update(self, *args, **kwargs):
         self.continue_moving()

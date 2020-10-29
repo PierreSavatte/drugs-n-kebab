@@ -39,6 +39,13 @@ class OrderTypes(Enum):
     }
 
 
+class OrderStatus(Enum):
+    IN_LINE = 0
+    IN_PREPARATION = 1
+    PREPARED = 2
+    READY = 3
+
+
 class Order(RandomlyInitialisable):
     expected_enums_at_init = [OrderTypes]
 
@@ -47,6 +54,7 @@ class Order(RandomlyInitialisable):
         self.name = values["name"]
         self.base_preparation_time = values["base_preparation_time"]
         self.recipe = values["recipe"]
+        self.status = OrderStatus.IN_LINE
 
         if not quantity:
             quantity = random.randint(1, 5)

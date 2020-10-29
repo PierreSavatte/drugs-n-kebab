@@ -1,9 +1,11 @@
 import random
+from enum import Enum
 
 import arcade
 from arcade_curtains import BaseScene, Widget
 
 from dnk.display import exit_game
+from dnk.display.order_list import OrderList
 from dnk.display.character_sprite import CharacterSprite, Direction
 from dnk.display.load_restaurant import load_restaurant_file, RestaurantLayers
 from dnk.display.notification import Notification
@@ -14,48 +16,52 @@ from dnk.settings import SPRITE_SCALING
 
 class RestaurantScene(BaseScene):
     def setup(self, restaurant=None):
+        self.restaurant = restaurant
+
         self.sprites = arcade.SpriteList()
         self.widget = RestaurantWidget(
-            SCREEN_WIDTH // 2,
-            SCREEN_HEIGHT // 2,
-            scene=self,
-            restaurant=restaurant,
-            events=self.events,
+            SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, scene=self
         )
         self.widget.register(self.sprites)
+        self.in_sub_window = False
+        self.interactive_window = None
 
         self.events.key_down(arcade.key.ESCAPE, exit_game)
+        self.events.key_down(arcade.key.E, self.start_interactive_window)
+
+    def start_interactive_window(self):
+        for interactive_sprite in self.widget.player.can_interact_with():
+            if interactive_sprite in self.widget.cash_registers:
+                self.widget.remove_keyboard_events()
+                self.in_sub_window = True
+                self.interactive_window = OrderList(
+                    scene=self,
+                    callback_once_finished=self.end_interactive_window,
+                )
+
+    def end_interactive_window(self):
+        self.widget.add_keyboard_events()
+        self.in_sub_window = False
+        self.interactive_window = None
 
     def enter_scene(self, previous_scene):
         arcade.set_background_color(arcade.color.WHITE)
 
-    def __getattr__(self, item):
-        # If the attribute isn't already part of self, check if the widget has it
-        if item in dir(self.widget):
-            return getattr(self.widget, item)
-        else:
-            raise AttributeError(
-                f"Nor {type(self)} nor {type(self)}.widget has an attribute named '{item}'."
-            )
-
 
 class RestaurantWidget(Widget):
-    def __init__(self, *args, **kwargs):
-        self.scene = kwargs.pop("scene")
-        super().__init__(*args, **kwargs)
-
     def update(self, *args, **kwargs):
         needs_refreshing = False
 
-        # Let the player continue walking
-        self.player.update()
+        if not self.scene.in_sub_window:
+            # Let the player continue walking
+            self.player.update()
 
         # Updates the restaurant (maybe receive an order)
-        nb_orders = len(self.restaurant.orders)
-        self.restaurant.update()
+        nb_orders = len(self.scene.restaurant.orders)
+        self.scene.restaurant.update()
 
         # Add notifications
-        if len(self.restaurant.orders) > nb_orders:
+        if len(self.scene.restaurant.orders) > nb_orders:
             cash_register = random.choice(self.cash_registers)
             notification = Notification(cash_register)
             self.sprites.append(notification)
@@ -78,12 +84,12 @@ class RestaurantWidget(Widget):
             if isinstance(sprite, Notification)
         ]
 
-    def setup_widget(self, restaurant=None, events=None):
-        self.restaurant = restaurant
+    def setup_widget(self, scene):
+        self.scene = scene
 
         # Restaurant layers (floor, walls, furniture, ...)
         restaurant_map = load_restaurant_file(
-            f"{restaurant.size_type.value}_restaurant"
+            f"{self.scene.restaurant.size_type.value}_restaurant"
         )
         self.collidable_layers = arcade.SpriteList()
         for layer_setting in RestaurantLayers.ordered():
@@ -105,6 +111,11 @@ class RestaurantWidget(Widget):
 
         self.sprites.extend(self.actors)
 
+        # Events
+        self.scene.events.frame(self.update)
+        self.add_keyboard_events()
+
+    def add_keyboard_events(self):
         # Event to allow player to walk
         for key, direction in [
             (arcade.key.W, Direction.UP),
@@ -112,14 +123,23 @@ class RestaurantWidget(Widget):
             (arcade.key.D, Direction.RIGHT),
             (arcade.key.A, Direction.LEFT),
         ]:
-            events.key_down(
+            self.scene.events.key_down(
                 key, self.player.start_moving, {"direction": direction.value}
             )
-            events.key_up(
+            self.scene.events.key_up(
                 key, self.player.stop_moving, {"direction": direction.value}
             )
 
-        events.frame(self.update)
+    def remove_keyboard_events(self):
+        # Event to allow player to walk
+        for key, direction in [
+            (arcade.key.W, Direction.UP),
+            (arcade.key.S, Direction.DOWN),
+            (arcade.key.D, Direction.RIGHT),
+            (arcade.key.A, Direction.LEFT),
+        ]:
+            self.scene.events.remove_key_down(key, self.player.start_moving)
+            self.scene.events.remove_key_up(key, self.player.stop_moving)
 
     @property
     def walkable_zone(self):

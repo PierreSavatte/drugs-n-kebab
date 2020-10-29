@@ -43,3 +43,9 @@ class Character(RandomlyInitialisable):
         e = Ethnicities(self.ethnicity)
         g = Genders(self.gender)
         return random.choice(ETHNICITY_NAMES[e][g])
+
+
+class Employee(Character):
+    def __init__(self, gender, ethnicity, *args, **kwargs):
+        super().__init__(gender, ethnicity)
+        self.customer_order = None

@@ -1,30 +1,15 @@
 import os
-
 from unittest.mock import patch
+
 import pytest
 
-from dnk.settings import SPRITE_HEIGHT, SPRITE_WIDTH
 from dnk.display.character_sprite import (
     CharacterSprite,
     Direction,
     Facing,
     MOVEMENT_ANIMATION_DURATION,
 )
-from dnk.display.restaurant_scene import RestaurantScene
-from dnk.models.character import Character
-from dnk.models.restaurant import Restaurant, RestaurantSizeType
-
-
-@pytest.fixture
-def character(gender, ethnicity):
-    return Character(gender=gender, ethnicity=ethnicity)
-
-
-@pytest.fixture
-def restaurant_scene():
-    return RestaurantScene(
-        restaurant=Restaurant(size_type=RestaurantSizeType.SMALL)
-    )
+from dnk.settings import SPRITE_HEIGHT, SPRITE_WIDTH
 
 
 def test_character_sprite_has_sprite_related_to_their_ethnicity(
@@ -100,7 +85,7 @@ def test_character_sprite_must_be_init_with_restaurant_widget(
 def test_character_sprite_can_say_if_its_insite_the_restaurant(
     character, restaurant_scene
 ):
-    _, (max_x, max_y) = restaurant_scene.walkable_zone
+    _, (max_x, max_y) = restaurant_scene.widget.walkable_zone
 
     sprite = CharacterSprite(character, restaurant_scene.widget)
 
@@ -130,7 +115,7 @@ def test_character_sprite_cannot_walk_outside_the_restaurant(
     character,
     restaurant_scene,
 ):
-    postion_start = getattr(restaurant_scene, postion_start_name)
+    postion_start = getattr(restaurant_scene.widget, postion_start_name)
 
     sprite = CharacterSprite(character, restaurant_scene.widget)
 
@@ -149,7 +134,7 @@ def test_character_sprite_spawns_at_a_carpet_position(
     sprite = CharacterSprite(character, restaurant_scene.widget)
 
     assert sprite.center_x in [
-        carpet.center_x for carpet in restaurant_scene.carpets
+        carpet.center_x for carpet in restaurant_scene.widget.carpets
     ]
 
 
@@ -231,3 +216,25 @@ def test_action_sprite_follows_facing_of_the_character_sprite(
     sprite.facing = Facing.RIGHT
 
     assert sprite.action_sprite.center_x == sprite.center_x + SPRITE_WIDTH
+
+
+def test_character_can_interact_with_interactive_objects(
+    character, restaurant_scene
+):
+    sprite = CharacterSprite(character, restaurant_scene.widget)
+
+    cash_register = restaurant_scene.widget.cash_registers[0]
+
+    sprite.center_x = cash_register.center_x
+    sprite.bottom = cash_register.bottom + SPRITE_HEIGHT
+    sprite.facing = Facing.DOWN
+
+    assert sprite.can_interact_with() == [cash_register]
+
+    cooking_station = restaurant_scene.widget.cooking_stations[0]
+
+    sprite.center_x = cooking_station.center_x
+    sprite.bottom = cooking_station.bottom - SPRITE_HEIGHT
+    sprite.facing = Facing.UP
+
+    assert sprite.can_interact_with() == [cooking_station]

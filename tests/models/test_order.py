@@ -1,14 +1,4 @@
-import pytest
-
-from dnk.models.order import Order, OrderTypes
-
-
-@pytest.fixture(
-    params=list(OrderTypes),
-    ids=[f"OrderType={order_type.name}" for order_type in list(OrderTypes)],
-)
-def order_type(request):
-    return request.param
+from dnk.models.order import Order, OrderStatus
 
 
 def test_order_has_all_data_needed(order_type):
@@ -22,3 +12,9 @@ def test_order_has_all_data_needed(order_type):
 
 def test_get_random_order():
     assert isinstance(Order.get_random(), Order)
+
+
+def test_order_has_status_and_default_is_in_line(order_type):
+    order = Order(order_type=order_type)
+
+    assert order.status == OrderStatus.IN_LINE

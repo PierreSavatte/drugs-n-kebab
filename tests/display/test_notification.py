@@ -5,19 +5,10 @@ import freezegun
 import pytest
 
 from dnk.display.notification import Notification
-from dnk.display.restaurant_scene import RestaurantScene
-from dnk.models.restaurant import Restaurant
 from dnk.settings import (
     NOTIFICATION_ANIMATION_DURATION,
     NOTIFICATION_WAITING_DURATION,
 )
-
-
-@pytest.fixture
-def restaurant_scene(restaurant_size_type):
-    return RestaurantScene(
-        restaurant=Restaurant(size_type=restaurant_size_type)
-    )
 
 
 @pytest.fixture
