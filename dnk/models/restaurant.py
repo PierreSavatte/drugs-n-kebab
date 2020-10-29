@@ -26,7 +26,9 @@ class Restaurant(RandomlyInitialisable):
         self.size_type = size_type
         self.size = SIZE_SIZE_TYPE_MAPPING[size_type]
 
-        self.last_ts_received_order = 0
+        self.last_ts_received_order = (
+            time.time() + 3 * ORDER_FREQUENCY
+        )  # Let the player breath at the beginning
         self.orders = []
 
     def update(self):
