@@ -1,5 +1,8 @@
 SCREEN_TITLE = "Drugs'n'Kebab"
 
+DEBUG_MODE = False
+
+
 SPRITE_SCALING = 4
 
 ORIGINAL_SPRITE_WIDTH = 16
