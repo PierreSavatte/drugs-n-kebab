@@ -29,13 +29,7 @@ class OrderTypes(Enum):
     FRENCH_FRIES = {
         "name": "french fries",
         "base_preparation_time": 1 * PREPARATION_TIME_UNIT,
-        "recipe": {
-            Ingredients.BREAD: 1,
-            Ingredients.LAMB: 1,
-            Ingredients.SALAD: 1,
-            Ingredients.TOMATO: 1,
-            Ingredients.ONION: 1,
-        },
+        "recipe": {Ingredients.POTATO: 2},
     }
 
 
