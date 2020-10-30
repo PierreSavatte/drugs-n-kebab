@@ -8,10 +8,74 @@ from dnk.settings import (
     WIDGET_FRAME_COLOR,
     WIDGET_FRAME_SIZE,
     FONT_SIZE,
+    TEXT_COLOR,
     WIDGET_WIDTH,
     WIDGET_HEIGHT,
     SELECTION_COLOR,
 )
+
+POSITION_ATTR_NAMES = [
+    "position",
+    "center_x",
+    "center_y",
+    "left",
+    "right",
+    "top",
+    "bottom",
+    "width",
+    "height",
+]
+
+
+class Text(arcade.Sprite):
+    def __init__(
+        self,
+        sprite_list,
+        text,
+        font_size=FONT_SIZE,
+        text_color=None,
+        highlight_color=None,
+        *args,
+        **kwargs
+    ):
+        super().__init__(*args, **kwargs)
+        if not text_color:
+            text_color = TEXT_COLOR
+
+        self.text = text
+
+        image = arcade.get_text_image(
+            text=text,
+            text_color=text_color,
+            font_size=font_size,
+            font_name=FONTS,
+        )
+        self._texture = arcade.Texture(text)
+        self.texture.image = image
+
+        self.width = image.width
+        self.height = image.height
+
+        self.highlighted = highlight_color
+        if highlight_color:
+            self.frame_ = arcade.Sprite()
+            self.frame_.texture = arcade.make_soft_square_texture(
+                size=100,
+                color=highlight_color,
+                center_alpha=255,
+                outer_alpha=255,
+            )
+            self.frame_.width = self.width
+            self.frame_.height = self.height
+
+            sprite_list.append(self.frame_)
+        sprite_list.append(self)
+
+    def __setattr__(self, key, value):
+        if hasattr(self, "highlighted") and self.highlighted:
+            if key in POSITION_ATTR_NAMES:
+                setattr(self.frame_, key, value)
+        super().__setattr__(key, value)
 
 
 class OrdersWindow(arcade.Sprite):
@@ -43,43 +107,6 @@ class OrdersWindow(arcade.Sprite):
             self.frame_.position = order_list_widget.anchor.position
 
 
-class OrderDescription(arcade.Sprite):
-    def __init__(
-        self, order_list_widget, i, order, selected=False, *args, **kwargs
-    ):
-        super().__init__(*args, **kwargs)
-        self.order = order
-
-        image = arcade.get_text_image(
-            text=order.name,
-            text_color=(0, 0, 0),
-            font_size=FONT_SIZE,
-            font_name=FONTS,
-        )
-        self._texture = arcade.Texture(order.name)
-        self.texture.image = image
-
-        self.width = image.width
-        self.height = image.height
-
-        self.topleft = order_list_widget.widget_window.topleft
-        self.bottom -= i * FONT_SIZE * 2
-
-        if selected:
-            self.frame_ = arcade.Sprite()
-            self.frame_.texture = arcade.make_soft_square_texture(
-                size=100,
-                color=SELECTION_COLOR,
-                center_alpha=255,
-                outer_alpha=255,
-            )
-            self.frame_.width = self.width
-            self.frame_.height = self.height
-            self.frame_.position = self.position
-
-            order_list_widget.sprites.append(self.frame_)
-
-
 class OrderList(arcade_curtains.Widget):
     def setup_widget(self, scene, callback_once_finished):
         self.scene = scene
@@ -107,10 +134,22 @@ class OrderList(arcade_curtains.Widget):
 
     def post_setup(self):
         for i, order in enumerate(self.orders):
-            selected = i == self.i
-            self.sprites.append(
-                OrderDescription(self, i, order, selected=selected)
+            name_text = Text(
+                sprite_list=self.sprites,
+                text=order.name.upper(),
+                highlight_color=SELECTION_COLOR if i == self.i else None,
             )
+            name_text.top = self.widget_window.top + 120
+            name_text.left = self.widget_window.left - 180
+            name_text.bottom -= i * FONT_SIZE * 2 + 30
+
+            recipe_text = Text(
+                sprite_list=self.sprites,
+                text=order.get_recipe_string(),
+                font_size=FONT_SIZE - 3,
+            )
+            recipe_text.bottom = name_text.bottom
+            recipe_text.left = name_text.right + 10
 
     def move_cursor(self, value):
         if self.orders:

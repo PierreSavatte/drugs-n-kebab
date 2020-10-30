@@ -4,7 +4,7 @@ import arcade
 import pytest
 from arcade_curtains import event
 
-from dnk.display.order_list import OrderList, OrderDescription
+from dnk.display.order_list import OrderList, Text
 from dnk.models.order import Order, OrderTypes
 
 
@@ -54,7 +54,23 @@ def test_order_list_display_order_list(
         callback_once_finished=restaurant_scene.end_interactive_window,
     )
 
-    assert get_text_image.call_count == len(list_of_orders_the_restaurant_has)
+    nb_orders = len(list_of_orders_the_restaurant_has)
+    # The name of the order and the recipe
+    nb_calls = nb_orders * 2
+
+    assert get_text_image.call_count == nb_calls
+
+    orders_names = [
+        order.name.upper() for order in list_of_orders_the_restaurant_has
+    ]
+    orders_recipes = [
+        order.get_recipe_string()
+        for order in list_of_orders_the_restaurant_has
+    ]
+    texts_displayed = sorted(
+        [call[1]["text"] for call in get_text_image.call_args_list]
+    )
+    assert texts_displayed == sorted([*orders_names, *orders_recipes])
 
 
 def test_order_list_can_be_closed_when_clicked_on_enter(
@@ -108,10 +124,17 @@ def test_order_list_deletes_its_sprites_when_closed(
         callback_once_finished=restaurant_scene.end_interactive_window,
     )
 
-    # The two others are the window, it's frame and the selection sprite
-    nb_sprites = len(list_of_orders_the_restaurant_has) + 3
-    assert len(order_list.sprites) == nb_sprites
-    assert len(restaurant_scene.interactive_window_sprites) == nb_sprites
+    window_and_frame = 2
+    order_names_and_desc = len(list_of_orders_the_restaurant_has) * 2
+    select_highlighting = 1
+    assert (
+        len(order_list.sprites)
+        == order_names_and_desc + window_and_frame + select_highlighting
+    )
+    assert (
+        len(restaurant_scene.interactive_window_sprites)
+        == order_names_and_desc + window_and_frame + select_highlighting
+    )
 
     # Close the window using enter
     order_list.tear_down()
@@ -134,18 +157,19 @@ def test_order_list_highlight_selected_order(
     (text_selected_order,) = [
         sprite
         for sprite in order_list.sprites
-        if isinstance(sprite, OrderDescription)
-        and sprite.order == selected_order
+        if isinstance(sprite, Text)
+        and sprite.text == selected_order.name.upper()
     ]
     other_orders = [
         sprite
         for sprite in order_list.sprites
-        if isinstance(sprite, OrderDescription)
-        and sprite.order != selected_order
+        if isinstance(sprite, Text)
+        and sprite.text != selected_order.name.upper()
     ]
 
     assert (
         hasattr(text_selected_order, "frame_")
+        and isinstance(text_selected_order.frame_, arcade.Sprite)
         and text_selected_order.frame_ in order_list.sprites
     )
 

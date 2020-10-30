@@ -54,5 +54,13 @@ class Order(RandomlyInitialisable):
             quantity = random.randint(1, 5)
         self.quantity = quantity
 
+    def get_recipe_string(self):
+        return ", ".join(
+            [
+                ":".join([ingredient.value, str(qty)])
+                for ingredient, qty in self.recipe.items()
+            ]
+        )
+
     def __repr__(self):
         return f"Order(name={self.name})"
