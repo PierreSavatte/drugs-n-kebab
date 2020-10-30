@@ -18,11 +18,12 @@ class RestaurantScene(BaseScene):
     def setup(self, restaurant=None):
         self.restaurant = restaurant
 
+        self.center = SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2
+
         self.restaurant_sprites = arcade.SpriteList()
         self.restaurant_window = RestaurantWidget(
             self.restaurant_sprites,
-            SCREEN_WIDTH // 2,
-            SCREEN_HEIGHT // 2,
+            *self.center,
             scene=self,
         )
 
@@ -38,10 +39,14 @@ class RestaurantScene(BaseScene):
             interactive_sprite
         ) in self.restaurant_window.player.can_interact_with():
             if interactive_sprite in self.restaurant_window.cash_registers:
+                self.events.remove_key_down(
+                    arcade.key.E, self.start_interactive_window
+                )
                 self.restaurant_window.player_movement_events.disable()
                 self.in_sub_window = True
                 self.interactive_window = OrderList(
                     self.interactive_window_sprites,
+                    *self.center,
                     scene=self,
                     callback_once_finished=self.end_interactive_window,
                 )
@@ -50,6 +55,7 @@ class RestaurantScene(BaseScene):
         self.restaurant_window.player_movement_events.enable()
         self.in_sub_window = False
         self.interactive_window = None
+        self.events.key_down(arcade.key.E, self.start_interactive_window)
 
     def enter_scene(self, previous_scene):
         arcade.set_background_color(arcade.color.WHITE)
