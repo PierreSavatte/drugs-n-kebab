@@ -59,3 +59,6 @@ class Order(RandomlyInitialisable):
         if not quantity:
             quantity = random.randint(1, 5)
         self.quantity = quantity
+
+    def __repr__(self):
+        return f"Order(name={self.name})"
