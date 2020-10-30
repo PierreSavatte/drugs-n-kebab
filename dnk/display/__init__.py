@@ -1,3 +1,4 @@
+import os
 import sys
 
 import arcade
@@ -5,6 +6,9 @@ from OpenGL import GL as gl
 from arcade_curtains import Curtains
 
 from dnk.settings import SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE
+
+root_path = os.path.dirname(os.path.abspath(__file__))
+resources_path = os.path.join(root_path, "..", "resources")
 
 
 def exit_game():

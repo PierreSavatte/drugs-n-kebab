@@ -3,13 +3,12 @@ import os
 
 import arcade
 
+from dnk.display import resources_path
 from dnk.settings import (
     ORIGINAL_SPRITE_WIDTH,
     ORIGINAL_CHARACTER_SPRITE_HEIGHT,
 )
 
-root_path = os.path.dirname(os.path.abspath(__file__))
-resources_path = os.path.join(root_path, "..", "resources")
 sprites_path = os.path.join(resources_path, "sprites")
 
 

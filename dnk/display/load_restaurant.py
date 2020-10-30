@@ -3,8 +3,8 @@ from enum import Enum
 
 import arcade
 
-root_path = os.path.dirname(os.path.abspath(__file__))
-resources_path = os.path.join(root_path, "..", "resources")
+from dnk.display import resources_path
+
 tiled_path = os.path.join(resources_path, "tiled")
 
 # We are assuming the carpets are at the bottom of the restaurants
