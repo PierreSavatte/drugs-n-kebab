@@ -8,6 +8,8 @@ from dnk.settings import (
     WIDGET_FRAME_COLOR,
     WIDGET_FRAME_SIZE,
     FONT_SIZE,
+    LINE_SEPARATION,
+    MARGIN,
     TEXT_COLOR,
     WIDGET_WIDTH,
     WIDGET_HEIGHT,
@@ -139,9 +141,13 @@ class OrderList(arcade_curtains.Widget):
                 text=order.name.upper(),
                 highlight_color=SELECTION_COLOR if i == self.i else None,
             )
-            name_text.top = self.widget_window.top + 120
-            name_text.left = self.widget_window.left - 180
-            name_text.bottom -= i * FONT_SIZE * 2 + 30
+            name_text.top = (
+                self.anchor.center_y + self.widget_window.height / 2 - MARGIN
+            )
+            name_text.left = (
+                self.anchor.center_x - self.widget_window.width / 2 + MARGIN
+            )
+            name_text.bottom -= i * FONT_SIZE * LINE_SEPARATION
 
             recipe_text = Text(
                 sprite_list=self.sprites,
