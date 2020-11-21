@@ -5,6 +5,7 @@ import pytest
 from arcade_curtains.event import Event
 
 from dnk.display.character_sprite import Facing, Direction
+from dnk.models.order import Order, OrderStatus, OrderTypes
 from dnk.settings import (
     SPRITE_HEIGHT,
 )
@@ -18,9 +19,11 @@ def cash_register(restaurant_scene):
 @pytest.fixture
 def place_player_in_front_of_cash_register(restaurant_window, cash_register):
     # Correctly position the character
-    restaurant_window.player.center_x = cash_register.center_x
-    restaurant_window.player.bottom = cash_register.bottom + SPRITE_HEIGHT
-    restaurant_window.player.facing = Facing.DOWN
+    restaurant_window.player_sprite.center_x = cash_register.center_x
+    restaurant_window.player_sprite.bottom = (
+        cash_register.bottom + SPRITE_HEIGHT
+    )
+    restaurant_window.player_sprite.facing = Facing.DOWN
 
 
 def test_display_sub_window_when_user_hits_e(restaurant_scene):
@@ -39,9 +42,10 @@ def test_order_list_is_displayed_when_user_interacts_with_cashregister(
     cash_register,
     place_player_in_front_of_cash_register,
 ):
-    assert restaurant_scene.restaurant_window.player.can_interact_with() == [
-        cash_register
-    ]
+    assert (
+        restaurant_scene.restaurant_window.player_sprite.can_interact_with()
+        == [cash_register]
+    )
 
     # Is called after the player hits the 'e' key
     restaurant_scene.start_interactive_window()
@@ -53,7 +57,10 @@ def test_order_list_is_displayed_when_user_interacts_with_cashregister(
 def test_order_list_is_not_displayed_when_user_interacts_with_nothing(
     order_list, restaurant_scene
 ):
-    assert restaurant_scene.restaurant_window.player.can_interact_with() == []
+    assert (
+        restaurant_scene.restaurant_window.player_sprite.can_interact_with()
+        == []
+    )
 
     # Is called after the player hits the 'e' key
     restaurant_scene.start_interactive_window()
@@ -78,15 +85,105 @@ def test_setting_order_list_will_delete_the_events_for_user_to_move(
         (arcade.key.D, Direction.RIGHT.value),
     ]:
         assert (
-            restaurant_window.player.start_moving,
+            restaurant_window.player_sprite.start_moving,
             {"direction": direction},
         ) not in restaurant_scene.events.event_group.handlers[
             (Event.KEY_DOWN, key)
         ]
 
         assert (
-            restaurant_window.player.stop_moving,
+            restaurant_window.player_sprite.stop_moving,
             {"direction": direction},
         ) not in restaurant_scene.events.event_group.handlers[
             (Event.KEY_UP, key)
         ]
+
+
+@patch("arcade.get_window")
+def test_user_retrieve_order_when_confirming_choice(
+    _, restaurant_scene, cash_register, place_player_in_front_of_cash_register
+):
+    # Is called after the player hits the 'e' key
+    restaurant_scene.start_interactive_window()
+
+    # Set order in restaurant
+    order = Order.get_random()
+    restaurant_scene.restaurant.orders = [order]
+    # Update orders of OrderList from updated restaurant.orders
+    restaurant_scene.interactive_window.update()
+
+    restaurant_scene.interactive_window.tear_down(key=arcade.key.ENTER)
+
+    player = restaurant_scene.player
+
+    assert player.order is order
+    assert order.status == OrderStatus.IN_PREPARATION
+
+
+@patch("arcade.get_window")
+def test_restaurant_see_its_order_pop_when_player_confirms_choice(
+    _, restaurant_scene, cash_register, place_player_in_front_of_cash_register
+):
+    # Is called after the player hits the 'e' key
+    restaurant_scene.start_interactive_window()
+
+    # Set order in restaurant
+    order = Order.get_random()
+    restaurant_scene.restaurant.orders = [order]
+    # Update orders of OrderList from updated restaurant.orders
+    restaurant_scene.interactive_window.update()
+
+    # Tearing down interactive_window will lead to the callback being called
+    restaurant_scene.interactive_window.tear_down(key=arcade.key.ENTER)
+
+    assert restaurant_scene.restaurant.orders == []
+
+
+@patch("arcade.get_window")
+def test_correct_order_is_popped_when_player_confirms_choice(
+    _, restaurant_scene, cash_register, place_player_in_front_of_cash_register
+):
+    # Is called after the player hits the 'e' key
+    restaurant_scene.start_interactive_window()
+
+    # Set order in restaurant
+    order0 = Order(order_type=OrderTypes.KEBAB)
+    order1 = Order(order_type=OrderTypes.FRENCH_FRIES)
+    order2 = Order(order_type=OrderTypes.FRENCH_FRIES)
+    order3 = Order(order_type=OrderTypes.KEBAB)
+    restaurant_scene.restaurant.orders = [order0, order1, order2, order3]
+    # Update orders of OrderList from updated restaurant.orders
+    restaurant_scene.interactive_window.update()
+    restaurant_scene.interactive_window.i = 1
+
+    # Tearing down interactive_window will lead to the callback being called
+    restaurant_scene.interactive_window.tear_down(key=arcade.key.ENTER)
+
+    player = restaurant_scene.player
+
+    assert restaurant_scene.restaurant.orders == [order0, order2, order3]
+    assert player.order is order1
+
+
+@patch("arcade.get_window")
+def test_order_can_not_be_taken_by_character_if_character_already_holds_an_order(
+    _, restaurant_scene, cash_register, place_player_in_front_of_cash_register
+):
+    # Is called after the player hits the 'e' key
+    restaurant_scene.start_interactive_window()
+    player = restaurant_scene.player
+    # Set order of player
+    player_order = Order.get_random()
+    player.order = player_order
+    # Set order in restaurant
+    order = Order.get_random()
+    restaurant_scene.restaurant.orders = [order]
+
+    # Update orders of OrderList from updated restaurant.orders
+    restaurant_scene.interactive_window.update()
+
+    # Tearing down interactive_window will lead to the callback being called
+    restaurant_scene.interactive_window.tear_down(key=arcade.key.ENTER)
+
+    assert restaurant_scene.restaurant.orders == [order]
+    assert player.order == player_order

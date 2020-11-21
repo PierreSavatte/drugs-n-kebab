@@ -4,19 +4,20 @@ import arcade
 from arcade_curtains import BaseScene, Widget
 from arcade_curtains.event import EventGroup
 
+from dnk.models.order import OrderStatus
 from dnk.display import exit_game
 from dnk.display.character_sprite import CharacterSprite, Direction
 from dnk.display.load_restaurant import load_restaurant_file, RestaurantLayers
 from dnk.display.notification import Notification
 from dnk.display.order_list import OrderList
-from dnk.models.character import Character
 from dnk.settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from dnk.settings import SPRITE_SCALING
 
 
 class RestaurantScene(BaseScene):
-    def setup(self, restaurant=None):
+    def setup(self, restaurant, player):
         self.restaurant = restaurant
+        self.player = player
 
         self.center = SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2
 
@@ -37,7 +38,7 @@ class RestaurantScene(BaseScene):
     def start_interactive_window(self):
         for (
             interactive_sprite
-        ) in self.restaurant_window.player.can_interact_with():
+        ) in self.restaurant_window.player_sprite.can_interact_with():
             if interactive_sprite in self.restaurant_window.cash_registers:
                 self.events.remove_key_down(
                     arcade.key.E, self.start_interactive_window
@@ -51,11 +52,16 @@ class RestaurantScene(BaseScene):
                     callback_once_finished=self.end_interactive_window,
                 )
 
-    def end_interactive_window(self):
+    def end_interactive_window(self, order_selected):
         self.restaurant_window.player_movement_events.enable()
         self.in_sub_window = False
         self.interactive_window = None
         self.events.key_down(arcade.key.E, self.start_interactive_window)
+
+        if order_selected and not self.player.order:
+            order_selected.set_next_step()
+            self.restaurant.orders.remove(order_selected)
+            self.player.order = order_selected
 
     def enter_scene(self, previous_scene):
         arcade.set_background_color(arcade.color.WHITE)
@@ -65,7 +71,7 @@ class RestaurantWidget(Widget):
     def update(self, *args, **kwargs):
         if not self.scene.in_sub_window:
             # Let the player continue walking
-            self.player.update()
+            self.player_sprite.update()
 
         # Updates the restaurant (maybe receive an order)
         nb_orders = len(self.scene.restaurant.orders)
@@ -112,8 +118,8 @@ class RestaurantWidget(Widget):
 
         # Actors
         self.actors = arcade.SpriteList()
-        self.player = CharacterSprite(Character.get_random(), self)
-        self.actors.append(self.player)
+        self.player_sprite = CharacterSprite(self.scene.player, self)
+        self.actors.append(self.player_sprite)
 
         self.sprites.extend(self.actors)
 
@@ -128,10 +134,14 @@ class RestaurantWidget(Widget):
             (arcade.key.A, Direction.LEFT),
         ]:
             self.player_movement_events.key_down(
-                key, self.player.start_moving, {"direction": direction.value}
+                key,
+                self.player_sprite.start_moving,
+                {"direction": direction.value},
             )
             self.player_movement_events.key_up(
-                key, self.player.stop_moving, {"direction": direction.value}
+                key,
+                self.player_sprite.stop_moving,
+                {"direction": direction.value},
             )
         self.scene.events.register_group(self.player_movement_events)
 

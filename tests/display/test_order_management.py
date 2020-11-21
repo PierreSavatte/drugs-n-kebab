@@ -87,8 +87,26 @@ def test_order_list_can_be_closed_when_clicked_on_enter(
     event_group = restaurant_scene.events.event_groups[2]
     assert (
         order_list.tear_down,
-        {},
+        {"key": arcade.key.ENTER},
     ) in event_group.handlers[(event.Event.KEY_DOWN, arcade.key.ENTER)]
+
+
+def test_order_list_can_be_closed_when_clicked_on_escape(
+    restaurant_scene, restaurant_window
+):
+    order_list = OrderList(
+        restaurant_scene.interactive_window_sprites,
+        scene=restaurant_scene,
+        callback_once_finished=restaurant_scene.end_interactive_window,
+    )
+
+    # Getting the order_list_events group
+    # Is init after the player_movement_events event group
+    event_group = restaurant_scene.events.event_groups[2]
+    assert (
+        order_list.tear_down,
+        {"key": arcade.key.ESCAPE},
+    ) in event_group.handlers[(event.Event.KEY_DOWN, arcade.key.ESCAPE)]
 
 
 @patch("arcade.get_window")
@@ -102,7 +120,7 @@ def test_order_list_when_closed_use_the_callback(
         callback_once_finished=callback_once_finished,
     )
     # Getting the player_movement_events group
-    order_list.tear_down()
+    order_list.tear_down(key=arcade.key.ESCAPE)
 
     callback_once_finished.assert_called_once()
 
@@ -137,7 +155,7 @@ def test_order_list_deletes_its_sprites_when_closed(
     )
 
     # Close the window using enter
-    order_list.tear_down()
+    order_list.tear_down(key=arcade.key.ENTER)
     assert len(order_list.sprites) == 0
     assert len(restaurant_scene.interactive_window_sprites) == 0
 
@@ -174,3 +192,39 @@ def test_order_list_highlight_selected_order(
     )
 
     assert all(not hasattr(order, "frame_") for order in other_orders)
+
+
+@patch("arcade.get_window")
+def test_order_list_exit_with_escape_does_not_validate_order_selection(
+    _, list_of_orders_the_restaurant_has, restaurant_scene
+):
+    callback = Mock()
+    order_list = OrderList(
+        restaurant_scene.interactive_window_sprites,
+        scene=restaurant_scene,
+        callback_once_finished=callback,
+    )
+
+    # Close the window using enter
+    order_list.tear_down(key=arcade.key.ESCAPE)
+
+    callback.assert_called_once_with(order_selected=None)
+
+
+@patch("arcade.get_window")
+def test_order_list_exit_with_enter_validate_order_selection(
+    _, list_of_orders_the_restaurant_has, restaurant_scene
+):
+    callback = Mock()
+    order_list = OrderList(
+        restaurant_scene.interactive_window_sprites,
+        scene=restaurant_scene,
+        callback_once_finished=callback,
+    )
+
+    selected_order = list_of_orders_the_restaurant_has[order_list.i]
+
+    # Close the window using enter
+    order_list.tear_down(key=arcade.key.ENTER)
+
+    callback.assert_called_once_with(order_selected=selected_order)

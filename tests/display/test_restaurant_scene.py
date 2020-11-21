@@ -20,18 +20,18 @@ from dnk.settings import (
 )
 
 
-def test_restaurant_scene_takes_a_model_to_be_init(restaurant):
-    restaurant_scene = RestaurantScene(restaurant)
+def test_restaurant_scene_takes_a_model_to_be_init(restaurant, character):
+    restaurant_scene = RestaurantScene(restaurant, character)
 
     assert restaurant_scene.restaurant == restaurant
 
 
 def test_restaurant_scene_has_walkable_zone_defined_based_on_restaurant_size_and_position(
-    restaurant,
+    restaurant, character
 ):
     x, y = restaurant.size
 
-    restaurant_scene = RestaurantScene(restaurant)
+    restaurant_scene = RestaurantScene(restaurant, character)
 
     half_restaurant_width = (y * SPRITE_WIDTH) // 2
     half_restaurant_height = (x * SPRITE_HEIGHT) // 2
@@ -49,21 +49,21 @@ def test_restaurant_scene_has_walkable_zone_defined_based_on_restaurant_size_and
 @patch("arcade.tilemap.process_layer")
 @patch("dnk.display.restaurant_scene.load_restaurant_file")
 def test_restaurant_scene_loads_good_layers_depending_on_the_size(
-    load_restaurant_file_mocked, _, __, ___, restaurant
+    load_restaurant_file_mocked, _, __, ___, restaurant, character
 ):
     size_name = restaurant.size_type.value
 
-    RestaurantScene(restaurant)
+    RestaurantScene(restaurant, character)
 
     load_restaurant_file_mocked.assert_called_once_with(
         f"{size_name}_restaurant"
     )
 
 
-def test_restaurant_window_holds_player(restaurant_window):
+def test_restaurant_window_holds_player_sprite(restaurant_window):
 
-    assert isinstance(restaurant_window.player, CharacterSprite)
-    assert restaurant_window.player in restaurant_window.actors
+    assert isinstance(restaurant_window.player_sprite, CharacterSprite)
+    assert restaurant_window.player_sprite in restaurant_window.actors
 
 
 def test_player_can_start_moving_in_restaurant(
@@ -71,20 +71,21 @@ def test_player_can_start_moving_in_restaurant(
 ):
     # Getting the player_movement_events group
     event_group = restaurant_scene.events.event_groups[1]
+    start_moving = restaurant_window.player_sprite.start_moving
     assert (
-        restaurant_window.player.start_moving,
+        start_moving,
         {"direction": Direction.UP.value},
     ) in event_group.handlers[(event.Event.KEY_DOWN, arcade.key.W)]
     assert (
-        restaurant_window.player.start_moving,
+        start_moving,
         {"direction": Direction.DOWN.value},
     ) in event_group.handlers[(event.Event.KEY_DOWN, arcade.key.S)]
     assert (
-        restaurant_window.player.start_moving,
+        start_moving,
         {"direction": Direction.LEFT.value},
     ) in event_group.handlers[(event.Event.KEY_DOWN, arcade.key.A)]
     assert (
-        restaurant_window.player.start_moving,
+        start_moving,
         {"direction": Direction.RIGHT.value},
     ) in event_group.handlers[(event.Event.KEY_DOWN, arcade.key.D)]
 
@@ -94,20 +95,21 @@ def test_player_can_stop_moving_in_restaurant(
 ):
     # Getting the player_movement_events group
     event_group = restaurant_scene.events.event_groups[1]
+    stop_moving = restaurant_window.player_sprite.stop_moving
     assert (
-        restaurant_window.player.stop_moving,
+        stop_moving,
         {"direction": Direction.UP.value},
     ) in event_group.handlers[(event.Event.KEY_UP, arcade.key.W)]
     assert (
-        restaurant_window.player.stop_moving,
+        stop_moving,
         {"direction": Direction.DOWN.value},
     ) in event_group.handlers[(event.Event.KEY_UP, arcade.key.S)]
     assert (
-        restaurant_window.player.stop_moving,
+        stop_moving,
         {"direction": Direction.LEFT.value},
     ) in event_group.handlers[(event.Event.KEY_UP, arcade.key.A)]
     assert (
-        restaurant_window.player.stop_moving,
+        stop_moving,
         {"direction": Direction.RIGHT.value},
     ) in event_group.handlers[(event.Event.KEY_UP, arcade.key.D)]
 
@@ -147,9 +149,9 @@ def test_restaurant_scene_define_good_layers_as_collidable(restaurant_window):
 
 @patch("dnk.models.restaurant.Restaurant.update")
 def test_restaurant_window_update_calls_restaurant_update(
-    restaurant_update_method, restaurant
+    restaurant_update_method, restaurant, character
 ):
-    restaurant_scene = RestaurantScene(restaurant)
+    restaurant_scene = RestaurantScene(restaurant, character)
     widget = restaurant_scene.restaurant_window
     assert (
         widget.update,
@@ -164,10 +166,9 @@ def test_restaurant_window_update_calls_restaurant_update(
 @patch("arcade.get_window")
 @freezegun.freeze_time("2020-10-28 18:24")
 def test_restaurant_window_triggers_a_notification_when_order_received(
-    _,
-    restaurant,
+    _, restaurant, character
 ):
-    restaurant_scene = RestaurantScene(restaurant)
+    restaurant_scene = RestaurantScene(restaurant, character)
     restaurant_window = restaurant_scene.restaurant_window
     restaurant.last_ts_received_order = time.time() - ORDER_FREQUENCY
 
@@ -184,10 +185,9 @@ def test_restaurant_window_triggers_a_notification_when_order_received(
 @patch("arcade.get_window")
 @freezegun.freeze_time("2020-10-28 18:24")
 def test_restaurant_window_deletes_notification_when_notification_is_finished(
-    _,
-    restaurant,
+    _, restaurant, character
 ):
-    restaurant_scene = RestaurantScene(restaurant)
+    restaurant_scene = RestaurantScene(restaurant, character)
     restaurant_window = restaurant_scene.restaurant_window
 
     # Notification was created, and is ready to be deleted

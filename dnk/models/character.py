@@ -38,6 +38,7 @@ class Character(RandomlyInitialisable):
         self.gender = gender
         self.ethnicity = ethnicity
         self.name = name or self._random_name()
+        self.order = None
 
     def _random_name(self):
         e = Ethnicities(self.ethnicity)

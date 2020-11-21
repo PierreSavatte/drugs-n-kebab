@@ -1,4 +1,5 @@
 import pytest
+import random
 
 from dnk.models import character
 from dnk.models import restaurant
@@ -16,12 +17,22 @@ def ethnicity(request):
     return request.param
 
 
+@pytest.fixture
+def random_ethnicity():
+    return random.choice(list(character.Ethnicities))
+
+
 @pytest.fixture(
     params=list(character.Genders),
     ids=[f"Gender={gender.name}" for gender in list(character.Genders)],
 )
 def gender(request):
     return request.param
+
+
+@pytest.fixture
+def random_gender():
+    return random.choice(list(character.Genders))
 
 
 @pytest.fixture(
