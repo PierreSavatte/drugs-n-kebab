@@ -60,10 +60,10 @@ def test_restaurant_scene_loads_good_layers_depending_on_the_size(
     )
 
 
-def test_restaurant_window_holds_player(restaurant_window):
+def test_restaurant_window_holds_player_sprite(restaurant_window):
 
-    assert isinstance(restaurant_window.player, CharacterSprite)
-    assert restaurant_window.player in restaurant_window.actors
+    assert isinstance(restaurant_window.player_sprite, CharacterSprite)
+    assert restaurant_window.player_sprite in restaurant_window.actors
 
 
 def test_player_can_start_moving_in_restaurant(
@@ -71,20 +71,21 @@ def test_player_can_start_moving_in_restaurant(
 ):
     # Getting the player_movement_events group
     event_group = restaurant_scene.events.event_groups[1]
+    start_moving = restaurant_window.player_sprite.start_moving
     assert (
-        restaurant_window.player.start_moving,
+        start_moving,
         {"direction": Direction.UP.value},
     ) in event_group.handlers[(event.Event.KEY_DOWN, arcade.key.W)]
     assert (
-        restaurant_window.player.start_moving,
+        start_moving,
         {"direction": Direction.DOWN.value},
     ) in event_group.handlers[(event.Event.KEY_DOWN, arcade.key.S)]
     assert (
-        restaurant_window.player.start_moving,
+        start_moving,
         {"direction": Direction.LEFT.value},
     ) in event_group.handlers[(event.Event.KEY_DOWN, arcade.key.A)]
     assert (
-        restaurant_window.player.start_moving,
+        start_moving,
         {"direction": Direction.RIGHT.value},
     ) in event_group.handlers[(event.Event.KEY_DOWN, arcade.key.D)]
 
@@ -94,20 +95,21 @@ def test_player_can_stop_moving_in_restaurant(
 ):
     # Getting the player_movement_events group
     event_group = restaurant_scene.events.event_groups[1]
+    stop_moving = restaurant_window.player_sprite.stop_moving
     assert (
-        restaurant_window.player.stop_moving,
+        stop_moving,
         {"direction": Direction.UP.value},
     ) in event_group.handlers[(event.Event.KEY_UP, arcade.key.W)]
     assert (
-        restaurant_window.player.stop_moving,
+        stop_moving,
         {"direction": Direction.DOWN.value},
     ) in event_group.handlers[(event.Event.KEY_UP, arcade.key.S)]
     assert (
-        restaurant_window.player.stop_moving,
+        stop_moving,
         {"direction": Direction.LEFT.value},
     ) in event_group.handlers[(event.Event.KEY_UP, arcade.key.A)]
     assert (
-        restaurant_window.player.stop_moving,
+        stop_moving,
         {"direction": Direction.RIGHT.value},
     ) in event_group.handlers[(event.Event.KEY_UP, arcade.key.D)]
 

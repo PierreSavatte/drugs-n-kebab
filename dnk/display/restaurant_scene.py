@@ -37,7 +37,7 @@ class RestaurantScene(BaseScene):
     def start_interactive_window(self):
         for (
             interactive_sprite
-        ) in self.restaurant_window.player.can_interact_with():
+        ) in self.restaurant_window.player_sprite.can_interact_with():
             if interactive_sprite in self.restaurant_window.cash_registers:
                 self.events.remove_key_down(
                     arcade.key.E, self.start_interactive_window
@@ -65,7 +65,7 @@ class RestaurantWidget(Widget):
     def update(self, *args, **kwargs):
         if not self.scene.in_sub_window:
             # Let the player continue walking
-            self.player.update()
+            self.player_sprite.update()
 
         # Updates the restaurant (maybe receive an order)
         nb_orders = len(self.scene.restaurant.orders)
@@ -128,10 +128,14 @@ class RestaurantWidget(Widget):
             (arcade.key.A, Direction.LEFT),
         ]:
             self.player_movement_events.key_down(
-                key, self.player.start_moving, {"direction": direction.value}
+                key,
+                self.player_sprite.start_moving,
+                {"direction": direction.value},
             )
             self.player_movement_events.key_up(
-                key, self.player.stop_moving, {"direction": direction.value}
+                key,
+                self.player_sprite.stop_moving,
+                {"direction": direction.value},
             )
         self.scene.events.register_group(self.player_movement_events)
 
