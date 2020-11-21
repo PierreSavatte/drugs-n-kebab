@@ -6,6 +6,7 @@ from OpenGL import GL as gl
 from arcade_curtains import Curtains
 
 from dnk.settings import SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE
+from dnk.models.character import Character
 
 root_path = os.path.dirname(os.path.abspath(__file__))
 resources_path = os.path.join(root_path, "..", "resources")
@@ -21,9 +22,12 @@ class Window(arcade.Window):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
         self.curtains = Curtains(self, draw_kwargs={"filter": gl.GL_NEAREST})
 
+        self.player = Character.get_random()
         self.curtains.add_scene(
             "restaurant",
-            RestaurantScene(Restaurant.get_random()),
+            RestaurantScene(
+                restaurant=Restaurant.get_random(), player=self.player
+            ),
         )
 
     def setup(self):

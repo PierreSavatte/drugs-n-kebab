@@ -9,14 +9,14 @@ from dnk.display.character_sprite import CharacterSprite, Direction
 from dnk.display.load_restaurant import load_restaurant_file, RestaurantLayers
 from dnk.display.notification import Notification
 from dnk.display.order_list import OrderList
-from dnk.models.character import Character
 from dnk.settings import SCREEN_WIDTH, SCREEN_HEIGHT
 from dnk.settings import SPRITE_SCALING
 
 
 class RestaurantScene(BaseScene):
-    def setup(self, restaurant=None):
+    def setup(self, restaurant, player):
         self.restaurant = restaurant
+        self.player = player
 
         self.center = SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2
 
@@ -112,8 +112,8 @@ class RestaurantWidget(Widget):
 
         # Actors
         self.actors = arcade.SpriteList()
-        self.player = CharacterSprite(Character.get_random(), self)
-        self.actors.append(self.player)
+        self.player_sprite = CharacterSprite(self.scene.player, self)
+        self.actors.append(self.player_sprite)
 
         self.sprites.extend(self.actors)
 

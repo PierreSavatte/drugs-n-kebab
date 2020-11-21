@@ -16,8 +16,8 @@ def restaurant(restaurant_size_type):
 
 
 @pytest.fixture
-def restaurant_scene(restaurant):
-    return RestaurantScene(restaurant)
+def restaurant_scene(restaurant, character):
+    return RestaurantScene(restaurant, character)
 
 
 @pytest.fixture
