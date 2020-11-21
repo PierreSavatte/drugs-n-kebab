@@ -60,6 +60,7 @@ class RestaurantScene(BaseScene):
 
         if order_selected and not self.player.order:
             order_selected.set_next_step()
+            self.restaurant.orders.remove(order_selected)
             self.player.order = order_selected
 
     def enter_scene(self, previous_scene):

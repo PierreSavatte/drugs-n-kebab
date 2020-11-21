@@ -179,6 +179,7 @@ class OrderList(arcade_curtains.Widget):
         self._erase_sprite_list()
 
         self.order_list_events.disable()
+
         order_selected = (
             self.orders[self.i] if (key == arcade.key.ENTER) else None
         )
@@ -190,7 +191,7 @@ class OrderList(arcade_curtains.Widget):
         self._create_widget_window()
         self.post_setup()
 
-    def update(self, *args, **kwargs):
+    def update(self, delta_time=None):
         if self.orders != self.scene.restaurant.orders or self.needs_update:
             self.needs_update = False
             self.orders = self.scene.restaurant.orders[:]
