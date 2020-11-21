@@ -62,5 +62,12 @@ class Order(RandomlyInitialisable):
             ]
         )
 
+    def set_next_step(self):
+        if self.status == OrderStatus.READY:
+            raise RuntimeError(
+                f"The order {self} is already at its maximal step."
+            )
+        self.status = OrderStatus(self.status.value + 1)
+
     def __repr__(self):
         return f"Order(name={self.name})"

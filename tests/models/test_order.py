@@ -1,3 +1,5 @@
+from pytest import raises
+
 from dnk.models.order import Order, OrderStatus
 
 
@@ -28,3 +30,22 @@ def test_order_can_format_recipe(order_type):
         ingredient.value in recipe_string and str(quantity) in recipe_string
         for ingredient, quantity in order.recipe.items()
     ]
+
+
+def test_order_can_set_next_step(order_type):
+    order = Order(order_type=order_type)
+
+    assert order.status == OrderStatus.IN_LINE
+
+    order.set_next_step()
+    assert order.status == OrderStatus.IN_PREPARATION
+
+    order.set_next_step()
+    assert order.status == OrderStatus.PREPARED
+
+    order.set_next_step()
+    assert order.status == OrderStatus.READY
+
+    with raises(RuntimeError) as e:
+        order.set_next_step()
+        assert "already at its maximal step" in str(e)
