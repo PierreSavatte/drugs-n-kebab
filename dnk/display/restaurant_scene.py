@@ -51,7 +51,7 @@ class RestaurantScene(BaseScene):
                     callback_once_finished=self.end_interactive_window,
                 )
 
-    def end_interactive_window(self):
+    def end_interactive_window(self, order_selected):
         self.restaurant_window.player_movement_events.enable()
         self.in_sub_window = False
         self.interactive_window = None

@@ -119,15 +119,23 @@ class OrderList(arcade_curtains.Widget):
         self.needs_update = False
         self.i = 0
 
+        # ---
+        # Events
+        # ---
         self.order_list_events = EventGroup()
+        # Movement events
         for key, value in [(arcade.key.W, -1), (arcade.key.S, 1)]:
             self.order_list_events.key_down(
                 key,
                 self.move_cursor,
                 {"value": value},
             )
-        self.order_list_events.key_down(arcade.key.ENTER, self.tear_down)
+        # Tear-down events
+        for key in [arcade.key.ENTER, arcade.key.ESCAPE]:
+            self.order_list_events.key_down(key, self.tear_down, {"key": key})
+        # Update event
         self.order_list_events.frame(self.update)
+        # Register events group
         self.scene.events.register_group(self.order_list_events)
 
     def _create_widget_window(self):
@@ -167,11 +175,14 @@ class OrderList(arcade_curtains.Widget):
         while self.sprites:
             self.sprites[0].kill()
 
-    def tear_down(self):
+    def tear_down(self, key):
         self._erase_sprite_list()
 
         self.order_list_events.disable()
-        self.callback_once_finished()
+        order_selected = (
+            self.orders[self.i] if (key == arcade.key.ENTER) else None
+        )
+        self.callback_once_finished(order_selected=order_selected)
 
     def erase_and_rewrite_list(self):
         self._erase_sprite_list()
