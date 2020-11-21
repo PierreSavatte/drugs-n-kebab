@@ -3,7 +3,7 @@ import time
 
 from dnk.models import RandomlyInitialisable
 from dnk.models.order import Order
-from dnk.settings import ORDER_FREQUENCY, FIRST_ORDER_DELAY
+from dnk.settings import ORDER_FREQUENCY, FIRST_ORDER_DELAY, ORDER_LIMIT
 
 
 class RestaurantSizeType(Enum):
@@ -35,4 +35,5 @@ class Restaurant(RandomlyInitialisable):
         now = time.time()
         if now >= self.last_ts_received_order + ORDER_FREQUENCY:
             self.last_ts_received_order = now
-            self.orders.append(Order.get_random())
+            if len(self.orders) < ORDER_LIMIT:
+                self.orders.append(Order.get_random())

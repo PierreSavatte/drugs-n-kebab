@@ -4,7 +4,7 @@ import freezegun
 import pytest
 
 from dnk.models import restaurant
-from dnk.settings import ORDER_FREQUENCY
+from dnk.settings import ORDER_FREQUENCY, ORDER_LIMIT
 from dnk.models.order import Order
 
 
@@ -51,3 +51,16 @@ def test_restaurant_receive_order_frequently(restaurant_size_type):
 
     assert len(r.orders) and isinstance(r.orders[0], Order)
     assert r.last_ts_received_order == time.time()
+
+
+def test_restaurant_can_not_receive_more_than_max_orders(restaurant_size_type):
+    r = restaurant.Restaurant(size_type=restaurant_size_type)
+    original_orders = [Order.get_random() for _ in range(ORDER_LIMIT)]
+
+    # Copy original orders in the restaurant.orders
+    r.orders = original_orders[:]
+    r.last_ts_received_order = time.time() - ORDER_FREQUENCY
+
+    r.update()
+
+    assert r.orders == original_orders
