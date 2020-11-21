@@ -5,6 +5,7 @@ import pytest
 from arcade_curtains.event import Event
 
 from dnk.display.character_sprite import Facing, Direction
+from dnk.models.order import Order, OrderStatus
 from dnk.settings import (
     SPRITE_HEIGHT,
 )
@@ -96,3 +97,24 @@ def test_setting_order_list_will_delete_the_events_for_user_to_move(
         ) not in restaurant_scene.events.event_group.handlers[
             (Event.KEY_UP, key)
         ]
+
+
+@patch("arcade.get_window")
+def test_user_retrieve_order_when_confirming_choice(
+    _, restaurant_scene, cash_register, place_player_in_front_of_cash_register
+):
+    # Is called after the player hits the 'e' key
+    restaurant_scene.start_interactive_window()
+
+    # Set order in restaurant
+    order = Order.get_random()
+    restaurant_scene.restaurant.orders = [order]
+    # Update orders of OrderList from updated restaurant.orders
+    restaurant_scene.interactive_window.update()
+
+    restaurant_scene.interactive_window.tear_down(key=arcade.key.ENTER)
+
+    player = restaurant_scene.player
+
+    assert player.order is order
+    assert order.status == OrderStatus.IN_PREPARATION

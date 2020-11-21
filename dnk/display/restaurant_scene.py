@@ -4,6 +4,7 @@ import arcade
 from arcade_curtains import BaseScene, Widget
 from arcade_curtains.event import EventGroup
 
+from dnk.models.order import OrderStatus
 from dnk.display import exit_game
 from dnk.display.character_sprite import CharacterSprite, Direction
 from dnk.display.load_restaurant import load_restaurant_file, RestaurantLayers
@@ -56,6 +57,10 @@ class RestaurantScene(BaseScene):
         self.in_sub_window = False
         self.interactive_window = None
         self.events.key_down(arcade.key.E, self.start_interactive_window)
+
+        if order_selected and not self.player.order:
+            order_selected.set_next_step()
+            self.player.order = order_selected
 
     def enter_scene(self, previous_scene):
         arcade.set_background_color(arcade.color.WHITE)
