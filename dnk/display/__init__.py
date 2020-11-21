@@ -1,3 +1,4 @@
+import os
 import sys
 
 import arcade
@@ -5,6 +6,9 @@ from OpenGL import GL as gl
 from arcade_curtains import Curtains
 
 from dnk.settings import SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE
+
+root_path = os.path.dirname(os.path.abspath(__file__))
+resources_path = os.path.join(root_path, "..", "resources")
 
 
 def exit_game():
@@ -19,7 +23,7 @@ class Window(arcade.Window):
 
         self.curtains.add_scene(
             "restaurant",
-            RestaurantScene(Restaurant(RestaurantSizeType.get_random())),
+            RestaurantScene(Restaurant.get_random()),
         )
 
     def setup(self):
@@ -28,4 +32,4 @@ class Window(arcade.Window):
 
 from .restaurant_scene import RestaurantScene
 
-from dnk.models.restaurant import Restaurant, RestaurantSizeType
+from dnk.models.restaurant import Restaurant

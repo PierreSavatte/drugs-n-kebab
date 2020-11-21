@@ -1,15 +1,16 @@
 import random
+from enum import Enum
 
-from dnk.models import RandomlyGettableEnum
+from dnk.models import RandomlyInitialisable
 
 
-class Ethnicities(RandomlyGettableEnum):
+class Ethnicities(Enum):
     AFRICAN = "african"
     FRENCH = "french"
     JAPANESE = "japanese"
 
 
-class Genders(RandomlyGettableEnum):
+class Genders(Enum):
     WOMAN = "woman"
     MAN = "man"
 
@@ -30,7 +31,9 @@ ETHNICITY_NAMES = {
 }
 
 
-class Character:
+class Character(RandomlyInitialisable):
+    expected_enums_at_init = [Genders, Ethnicities]
+
     def __init__(self, gender, ethnicity, name=None):
         self.gender = gender
         self.ethnicity = ethnicity
@@ -40,3 +43,9 @@ class Character:
         e = Ethnicities(self.ethnicity)
         g = Genders(self.gender)
         return random.choice(ETHNICITY_NAMES[e][g])
+
+
+class Employee(Character):
+    def __init__(self, gender, ethnicity, *args, **kwargs):
+        super().__init__(gender, ethnicity)
+        self.customer_order = None

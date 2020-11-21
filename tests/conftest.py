@@ -2,6 +2,7 @@ import pytest
 
 from dnk.models import character
 from dnk.models import restaurant
+from dnk.models import order
 
 
 @pytest.fixture(
@@ -31,4 +32,14 @@ def gender(request):
     ],
 )
 def restaurant_size_type(request):
+    return request.param
+
+
+@pytest.fixture(
+    params=list(order.OrderTypes),
+    ids=[
+        f"OrderType={order_type.name}" for order_type in list(order.OrderTypes)
+    ],
+)
+def order_type(request):
     return request.param

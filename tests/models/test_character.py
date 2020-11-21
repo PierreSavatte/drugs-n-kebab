@@ -28,11 +28,5 @@ def test_character_has_name_related_to_their_ethnicity_if_no_name_given(
     assert c.name == selected_name
 
 
-def test_get_random_ethnicity():
-    assert isinstance(
-        character.Ethnicities.get_random(), character.Ethnicities
-    )
-
-
-def test_get_random_gender():
-    assert isinstance(character.Genders.get_random(), character.Genders)
+def test_get_random_character():
+    assert isinstance(character.Character.get_random(), character.Character)
