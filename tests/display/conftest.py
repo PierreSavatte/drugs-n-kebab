@@ -6,8 +6,8 @@ from dnk.models.restaurant import Restaurant
 
 
 @pytest.fixture
-def character(gender, ethnicity):
-    return Character(gender=gender, ethnicity=ethnicity)
+def character(random_gender, random_ethnicity):
+    return Character(gender=random_gender, ethnicity=random_ethnicity)
 
 
 @pytest.fixture
